@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.gitee.nuliing</groupId>
-    <artifactId>best-effort-notify</artifactId>
+    <artifactId>cn-ben</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
     <modules>
