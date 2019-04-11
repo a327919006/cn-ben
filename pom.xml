@@ -12,6 +12,8 @@
         <module>ben-api</module>
         <module>ben-dal</module>
         <module>ben-service</module>
+        <module>ben-boot-sample</module>
+        <module>ben-service-api</module>
     </modules>
 
 
@@ -22,6 +24,7 @@
 
         <!--model-->
         <ben-api.version>${version}</ben-api.version>
+        <ben-service-api.version>${version}</ben-service-api.version>
         <ben-dal.version>${version}</ben-dal.version>
         <ben-service.version>${version}</ben-service.version>
 

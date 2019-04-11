@@ -1,0 +1,10 @@
+# 运行端口
+server:
+  port: 10081
+
+spring:
+  # ActiveMQ配置
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+    user: admin
+    password: admin
