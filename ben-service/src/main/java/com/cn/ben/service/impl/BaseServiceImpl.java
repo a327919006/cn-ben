@@ -1,4 +1,4 @@
-package com.cn.ben.service.service;
+package com.cn.ben.service.impl;
 
 import com.cn.ben.dal.mapper.BaseMapper;
 import lombok.extern.slf4j.Slf4j;

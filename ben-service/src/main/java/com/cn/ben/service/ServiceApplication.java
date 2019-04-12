@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Chen Nan
  */
 @SpringBootApplication
-@MapperScan("com.cn.rmq.dal.mapper")
+@MapperScan("com.cn.ben.dal.mapper")
 @ComponentScan(basePackages = {
         "com.cn.ben.dal.mapper",
         "com.cn.ben.service.mq"})

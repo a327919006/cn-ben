@@ -58,6 +58,6 @@
     </root>
 
     <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="OFF"/>
-    <logger name="com.cn.rmq.sample.mapper" level="DEBUG"/>
+    <logger name="com.cn.ben.sample.mapper" level="DEBUG"/>
 
 </configuration>
