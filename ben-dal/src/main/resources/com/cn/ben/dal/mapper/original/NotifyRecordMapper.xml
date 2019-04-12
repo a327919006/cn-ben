@@ -5,6 +5,7 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
     <result column="notify_header" jdbcType="VARCHAR" property="notifyHeader" />
+    <result column="notify_timeout" jdbcType="SMALLINT" property="notifyTimeout" />
     <result column="notify_times" jdbcType="SMALLINT" property="notifyTimes" />
     <result column="notify_status" jdbcType="TINYINT" property="notifyStatus" />
     <result column="business_name" jdbcType="VARCHAR" property="businessName" />
@@ -16,8 +17,8 @@
     <result column="notify_content" jdbcType="LONGVARCHAR" property="notifyContent" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, notify_url, notify_header, notify_times, notify_status, business_name, business_id, 
-    create_time, update_time
+    id, notify_url, notify_header, notify_timeout, notify_times, notify_status, business_name, 
+    business_id, create_time, update_time
   </sql>
   <sql id="Blob_Column_List">
     notify_content
@@ -36,13 +37,13 @@
   </delete>
   <insert id="insert" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     insert into t_notify_record (id, notify_url, notify_header, 
-      notify_times, notify_status, business_name, 
-      business_id, create_time, update_time, 
-      notify_content)
+      notify_timeout, notify_times, notify_status, 
+      business_name, business_id, create_time, 
+      update_time, notify_content)
     values (#{id,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, #{notifyHeader,jdbcType=VARCHAR}, 
-      #{notifyTimes,jdbcType=SMALLINT}, #{notifyStatus,jdbcType=TINYINT}, #{businessName,jdbcType=VARCHAR}, 
-      #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{notifyContent,jdbcType=LONGVARCHAR})
+      #{notifyTimeout,jdbcType=SMALLINT}, #{notifyTimes,jdbcType=SMALLINT}, #{notifyStatus,jdbcType=TINYINT}, 
+      #{businessName,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{notifyContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     insert into t_notify_record
@@ -55,6 +56,9 @@
       </if>
       <if test="notifyHeader != null">
         notify_header,
+      </if>
+      <if test="notifyTimeout != null">
+        notify_timeout,
       </if>
       <if test="notifyTimes != null">
         notify_times,
@@ -88,6 +92,9 @@
       <if test="notifyHeader != null">
         #{notifyHeader,jdbcType=VARCHAR},
       </if>
+      <if test="notifyTimeout != null">
+        #{notifyTimeout,jdbcType=SMALLINT},
+      </if>
       <if test="notifyTimes != null">
         #{notifyTimes,jdbcType=SMALLINT},
       </if>
@@ -120,6 +127,9 @@
       <if test="notifyHeader != null">
         notify_header = #{notifyHeader,jdbcType=VARCHAR},
       </if>
+      <if test="notifyTimeout != null">
+        notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
+      </if>
       <if test="notifyTimes != null">
         notify_times = #{notifyTimes,jdbcType=SMALLINT},
       </if>
@@ -148,6 +158,7 @@
     update t_notify_record
     set notify_url = #{notifyUrl,jdbcType=VARCHAR},
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
+      notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
       notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},
       business_name = #{businessName,jdbcType=VARCHAR},
@@ -161,6 +172,7 @@
     update t_notify_record
     set notify_url = #{notifyUrl,jdbcType=VARCHAR},
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
+      notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
       notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},
       business_name = #{businessName,jdbcType=VARCHAR},

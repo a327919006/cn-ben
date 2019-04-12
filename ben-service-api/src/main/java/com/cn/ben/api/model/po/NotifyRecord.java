@@ -10,6 +10,8 @@ public class NotifyRecord implements Serializable {
 
     private String notifyHeader;
 
+    private Short notifyTimeout;
+
     private Short notifyTimes;
 
     private Byte notifyStatus;
@@ -46,6 +48,14 @@ public class NotifyRecord implements Serializable {
 
     public void setNotifyHeader(String notifyHeader) {
         this.notifyHeader = notifyHeader;
+    }
+
+    public Short getNotifyTimeout() {
+        return notifyTimeout;
+    }
+
+    public void setNotifyTimeout(Short notifyTimeout) {
+        this.notifyTimeout = notifyTimeout;
     }
 
     public Short getNotifyTimes() {
