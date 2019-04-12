@@ -3,11 +3,11 @@
 <mapper namespace="com.cn.ben.dal.mapper.NotifyRecordMapper">
   <resultMap id="BaseResultMap" type="com.cn.ben.api.model.po.NotifyRecord">
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="notify_type" jdbcType="VARCHAR" property="notifyType" />
-    <result column="notify_times" jdbcType="SMALLINT" property="notifyTimes" />
     <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
     <result column="notify_header" jdbcType="VARCHAR" property="notifyHeader" />
+    <result column="notify_times" jdbcType="SMALLINT" property="notifyTimes" />
     <result column="notify_status" jdbcType="TINYINT" property="notifyStatus" />
+    <result column="business_name" jdbcType="VARCHAR" property="businessName" />
     <result column="business_id" jdbcType="VARCHAR" property="businessId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -16,7 +16,7 @@
     <result column="notify_content" jdbcType="LONGVARCHAR" property="notifyContent" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, notify_type, notify_times, notify_url, notify_header, notify_status, business_id, 
+    id, notify_url, notify_header, notify_times, notify_status, business_name, business_id, 
     create_time, update_time
   </sql>
   <sql id="Blob_Column_List">
@@ -35,12 +35,12 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.cn.ben.api.model.po.NotifyRecord">
-    insert into t_notify_record (id, notify_type, notify_times, 
-      notify_url, notify_header, notify_status, 
+    insert into t_notify_record (id, notify_url, notify_header, 
+      notify_times, notify_status, business_name, 
       business_id, create_time, update_time, 
       notify_content)
-    values (#{id,jdbcType=VARCHAR}, #{notifyType,jdbcType=VARCHAR}, #{notifyTimes,jdbcType=SMALLINT}, 
-      #{notifyUrl,jdbcType=VARCHAR}, #{notifyHeader,jdbcType=VARCHAR}, #{notifyStatus,jdbcType=TINYINT}, 
+    values (#{id,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, #{notifyHeader,jdbcType=VARCHAR}, 
+      #{notifyTimes,jdbcType=SMALLINT}, #{notifyStatus,jdbcType=TINYINT}, #{businessName,jdbcType=VARCHAR}, 
       #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{notifyContent,jdbcType=LONGVARCHAR})
   </insert>
@@ -50,20 +50,20 @@
       <if test="id != null">
         id,
       </if>
-      <if test="notifyType != null">
-        notify_type,
-      </if>
-      <if test="notifyTimes != null">
-        notify_times,
-      </if>
       <if test="notifyUrl != null">
         notify_url,
       </if>
       <if test="notifyHeader != null">
         notify_header,
       </if>
+      <if test="notifyTimes != null">
+        notify_times,
+      </if>
       <if test="notifyStatus != null">
         notify_status,
+      </if>
+      <if test="businessName != null">
+        business_name,
       </if>
       <if test="businessId != null">
         business_id,
@@ -82,20 +82,20 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="notifyType != null">
-        #{notifyType,jdbcType=VARCHAR},
-      </if>
-      <if test="notifyTimes != null">
-        #{notifyTimes,jdbcType=SMALLINT},
-      </if>
       <if test="notifyUrl != null">
         #{notifyUrl,jdbcType=VARCHAR},
       </if>
       <if test="notifyHeader != null">
         #{notifyHeader,jdbcType=VARCHAR},
       </if>
+      <if test="notifyTimes != null">
+        #{notifyTimes,jdbcType=SMALLINT},
+      </if>
       <if test="notifyStatus != null">
         #{notifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="businessName != null">
+        #{businessName,jdbcType=VARCHAR},
       </if>
       <if test="businessId != null">
         #{businessId,jdbcType=VARCHAR},
@@ -114,20 +114,20 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     update t_notify_record
     <set>
-      <if test="notifyType != null">
-        notify_type = #{notifyType,jdbcType=VARCHAR},
-      </if>
-      <if test="notifyTimes != null">
-        notify_times = #{notifyTimes,jdbcType=SMALLINT},
-      </if>
       <if test="notifyUrl != null">
         notify_url = #{notifyUrl,jdbcType=VARCHAR},
       </if>
       <if test="notifyHeader != null">
         notify_header = #{notifyHeader,jdbcType=VARCHAR},
       </if>
+      <if test="notifyTimes != null">
+        notify_times = #{notifyTimes,jdbcType=SMALLINT},
+      </if>
       <if test="notifyStatus != null">
         notify_status = #{notifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="businessName != null">
+        business_name = #{businessName,jdbcType=VARCHAR},
       </if>
       <if test="businessId != null">
         business_id = #{businessId,jdbcType=VARCHAR},
@@ -146,11 +146,11 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     update t_notify_record
-    set notify_type = #{notifyType,jdbcType=VARCHAR},
-      notify_times = #{notifyTimes,jdbcType=SMALLINT},
-      notify_url = #{notifyUrl,jdbcType=VARCHAR},
+    set notify_url = #{notifyUrl,jdbcType=VARCHAR},
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
+      notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},
+      business_name = #{businessName,jdbcType=VARCHAR},
       business_id = #{businessId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -159,11 +159,11 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     update t_notify_record
-    set notify_type = #{notifyType,jdbcType=VARCHAR},
-      notify_times = #{notifyTimes,jdbcType=SMALLINT},
-      notify_url = #{notifyUrl,jdbcType=VARCHAR},
+    set notify_url = #{notifyUrl,jdbcType=VARCHAR},
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
+      notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},
+      business_name = #{businessName,jdbcType=VARCHAR},
       business_id = #{businessId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

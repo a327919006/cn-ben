@@ -6,15 +6,15 @@ import java.time.LocalDateTime;
 public class NotifyRecord implements Serializable {
     private String id;
 
-    private String notifyType;
-
-    private Short notifyTimes;
-
     private String notifyUrl;
 
     private String notifyHeader;
 
+    private Short notifyTimes;
+
     private Byte notifyStatus;
+
+    private String businessName;
 
     private String businessId;
 
@@ -30,22 +30,6 @@ public class NotifyRecord implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getNotifyType() {
-        return notifyType;
-    }
-
-    public void setNotifyType(String notifyType) {
-        this.notifyType = notifyType;
-    }
-
-    public Short getNotifyTimes() {
-        return notifyTimes;
-    }
-
-    public void setNotifyTimes(Short notifyTimes) {
-        this.notifyTimes = notifyTimes;
     }
 
     public String getNotifyUrl() {
@@ -64,12 +48,28 @@ public class NotifyRecord implements Serializable {
         this.notifyHeader = notifyHeader;
     }
 
+    public Short getNotifyTimes() {
+        return notifyTimes;
+    }
+
+    public void setNotifyTimes(Short notifyTimes) {
+        this.notifyTimes = notifyTimes;
+    }
+
     public Byte getNotifyStatus() {
         return notifyStatus;
     }
 
     public void setNotifyStatus(Byte notifyStatus) {
         this.notifyStatus = notifyStatus;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 
     public String getBusinessId() {
