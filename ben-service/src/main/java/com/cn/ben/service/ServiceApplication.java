@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 @MapperScan("com.cn.ben.dal.mapper")
 @ComponentScan(basePackages = {
         "com.cn.ben.dal.mapper",
+        "com.cn.ben.service.config",
         "com.cn.ben.service.mq"})
 public class ServiceApplication {
     public static void main(String[] args) {

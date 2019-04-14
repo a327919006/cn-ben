@@ -27,3 +27,17 @@ dubbo:
     port: 20881
   scan:
     base-packages: com.cn.ben.service.impl
+
+# 延时队列配置
+delay:
+  queue:
+    interval:
+    - 0
+    - 1
+    - 4
+    - 10
+    - 30
+    - 60
+    - 120
+    - 360
+    - 900

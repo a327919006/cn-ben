@@ -22,11 +22,13 @@ import java.util.concurrent.TimeUnit;
 public class NotifyTask implements Delayed {
     private LocalDateTime executeTime;
 
+    private String id;
+
     private String notifyUrl;
 
     private Map<String, String> notifyHeader;
 
-    private String notifyContent;
+    private Map<String, Object> notifyContent;
 
     private Short notifyTimeout;
 

@@ -28,7 +28,7 @@ public class BenNotify {
     /**
      * 通知请求参数
      */
-    private String notifyContent;
+    private Map<String, Object> notifyContent;
     /**
      * 通知请求超时时长，单位：毫秒。默认5秒
      */

@@ -1,5 +1,6 @@
 package com.cn.ben.sample.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.cn.ben.api.model.BenNotify;
 import com.cn.ben.sample.model.TestMessage;
@@ -39,7 +40,7 @@ public class SampleController {
         // 通知请求地址
         notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify");
         // 通知请求参数
-        notify.setNotifyContent(JSONUtil.toJsonStr(req));
+        notify.setNotifyContent(BeanUtil.beanToMap(req));
         // 通知请求头
         Map<String, String> header = new HashMap<>();
         header.put("token", "123456");
