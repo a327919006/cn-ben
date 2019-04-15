@@ -29,8 +29,12 @@ dubbo:
     base-packages: com.cn.ben.service.impl
 
 # 延时队列配置
-delay:
-  queue:
+task:
+  handler:
+    core-pool-size: 10
+    max-pool-size: 100
+    keep-alive-time: 60000
+    queue-capacity: 10
     interval:
     - 0
     - 1

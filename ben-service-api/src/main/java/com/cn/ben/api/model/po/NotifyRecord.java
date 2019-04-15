@@ -8,7 +8,11 @@ public class NotifyRecord implements Serializable {
 
     private String notifyUrl;
 
+    private Byte notifyMethod;
+
     private String notifyHeader;
+
+    private Byte notifyParamType;
 
     private Short notifyTimeout;
 
@@ -24,7 +28,7 @@ public class NotifyRecord implements Serializable {
 
     private LocalDateTime updateTime;
 
-    private String notifyContent;
+    private String notifyParam;
 
     public String getId() {
         return id;
@@ -42,12 +46,28 @@ public class NotifyRecord implements Serializable {
         this.notifyUrl = notifyUrl;
     }
 
+    public Byte getNotifyMethod() {
+        return notifyMethod;
+    }
+
+    public void setNotifyMethod(Byte notifyMethod) {
+        this.notifyMethod = notifyMethod;
+    }
+
     public String getNotifyHeader() {
         return notifyHeader;
     }
 
     public void setNotifyHeader(String notifyHeader) {
         this.notifyHeader = notifyHeader;
+    }
+
+    public Byte getNotifyParamType() {
+        return notifyParamType;
+    }
+
+    public void setNotifyParamType(Byte notifyParamType) {
+        this.notifyParamType = notifyParamType;
     }
 
     public Short getNotifyTimeout() {
@@ -106,11 +126,11 @@ public class NotifyRecord implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getNotifyContent() {
-        return notifyContent;
+    public String getNotifyParam() {
+        return notifyParam;
     }
 
-    public void setNotifyContent(String notifyContent) {
-        this.notifyContent = notifyContent;
+    public void setNotifyParam(String notifyParam) {
+        this.notifyParam = notifyParam;
     }
 }

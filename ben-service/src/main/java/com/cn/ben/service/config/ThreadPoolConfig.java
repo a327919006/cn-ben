@@ -20,6 +20,9 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class ThreadPoolConfig {
 
+    @Autowired
+    private TaskHandlerConfig config;
+
     @Bean
     public ThreadPoolExecutor singleThreadExecutor() {
         // 为线程池起名
@@ -30,6 +33,18 @@ public class ThreadPoolConfig {
                 0,
                 TimeUnit.MILLISECONDS,
                 new LinkedBlockingDeque<>(),
+                namedThreadFactory);
+    }
+
+    @Bean
+    public ThreadPoolExecutor taskExecutor() {
+        // 为线程池起名
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNamePrefix("task-pool-").build();
+        return new ThreadPoolExecutor(config.getCorePoolSize(),
+                config.getMaxPoolSize(),
+                config.getKeepAliveTime(),
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<>(config.getQueueCapacity()),
                 namedThreadFactory);
     }
 }

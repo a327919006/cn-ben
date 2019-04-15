@@ -16,9 +16,26 @@ import java.util.List;
  * @date 2019/3/18.
  */
 @Component
-@ConfigurationProperties(prefix = "delay.queue")
+@ConfigurationProperties(prefix = "task.handler")
 @Data
-public class DelayQueueConfig {
+public class TaskHandlerConfig {
+    /**
+     * 线程池最小线程数
+     */
+    private Integer corePoolSize = 10;
+    /**
+     * 线程池最大线程数
+     */
+    private Integer maxPoolSize = 100;
+    /**
+     * 线程运行的空闲时间
+     */
+    private Integer keepAliveTime = 60000;
+    /**
+     * 缓存队列大小
+     */
+    private Integer queueCapacity = 10;
+
     /**
      * 重复通知时间间隔（单位：分钟）
      * 举例： [0, 1, 4, 10, 30, 60, 120, 360]

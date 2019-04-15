@@ -1,5 +1,7 @@
 package com.cn.ben.api.model.dto;
 
+import com.cn.ben.api.enums.MethodEnum;
+import com.cn.ben.api.enums.ParamTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,9 +28,13 @@ public class NotifyTask implements Delayed {
 
     private String notifyUrl;
 
+    private MethodEnum notifyMethod;
+
     private Map<String, String> notifyHeader;
 
-    private Map<String, Object> notifyContent;
+    private Map<String, Object> notifyParam;
+
+    private ParamTypeEnum notifyParamType;
 
     private Short notifyTimeout;
 

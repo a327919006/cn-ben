@@ -4,7 +4,9 @@
   <resultMap id="BaseResultMap" type="com.cn.ben.api.model.po.NotifyRecord">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
+    <result column="notify_method" jdbcType="TINYINT" property="notifyMethod" />
     <result column="notify_header" jdbcType="VARCHAR" property="notifyHeader" />
+    <result column="notify_param_type" jdbcType="TINYINT" property="notifyParamType" />
     <result column="notify_timeout" jdbcType="SMALLINT" property="notifyTimeout" />
     <result column="notify_times" jdbcType="SMALLINT" property="notifyTimes" />
     <result column="notify_status" jdbcType="TINYINT" property="notifyStatus" />
@@ -14,14 +16,14 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cn.ben.api.model.po.NotifyRecord">
-    <result column="notify_content" jdbcType="LONGVARCHAR" property="notifyContent" />
+    <result column="notify_param" jdbcType="LONGVARCHAR" property="notifyParam" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, notify_url, notify_header, notify_timeout, notify_times, notify_status, business_name, 
-    business_id, create_time, update_time
+    id, notify_url, notify_method, notify_header, notify_param_type, notify_timeout, 
+    notify_times, notify_status, business_name, business_id, create_time, update_time
   </sql>
   <sql id="Blob_Column_List">
-    notify_content
+    notify_param
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 
@@ -36,14 +38,16 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.cn.ben.api.model.po.NotifyRecord">
-    insert into t_notify_record (id, notify_url, notify_header, 
-      notify_timeout, notify_times, notify_status, 
-      business_name, business_id, create_time, 
-      update_time, notify_content)
-    values (#{id,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, #{notifyHeader,jdbcType=VARCHAR}, 
-      #{notifyTimeout,jdbcType=SMALLINT}, #{notifyTimes,jdbcType=SMALLINT}, #{notifyStatus,jdbcType=TINYINT}, 
-      #{businessName,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{notifyContent,jdbcType=LONGVARCHAR})
+    insert into t_notify_record (id, notify_url, notify_method, 
+      notify_header, notify_param_type, notify_timeout, 
+      notify_times, notify_status, business_name, 
+      business_id, create_time, update_time, 
+      notify_param)
+    values (#{id,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, #{notifyMethod,jdbcType=TINYINT}, 
+      #{notifyHeader,jdbcType=VARCHAR}, #{notifyParamType,jdbcType=TINYINT}, #{notifyTimeout,jdbcType=SMALLINT}, 
+      #{notifyTimes,jdbcType=SMALLINT}, #{notifyStatus,jdbcType=TINYINT}, #{businessName,jdbcType=VARCHAR}, 
+      #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{notifyParam,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     insert into t_notify_record
@@ -54,8 +58,14 @@
       <if test="notifyUrl != null">
         notify_url,
       </if>
+      <if test="notifyMethod != null">
+        notify_method,
+      </if>
       <if test="notifyHeader != null">
         notify_header,
+      </if>
+      <if test="notifyParamType != null">
+        notify_param_type,
       </if>
       <if test="notifyTimeout != null">
         notify_timeout,
@@ -78,8 +88,8 @@
       <if test="updateTime != null">
         update_time,
       </if>
-      <if test="notifyContent != null">
-        notify_content,
+      <if test="notifyParam != null">
+        notify_param,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -89,8 +99,14 @@
       <if test="notifyUrl != null">
         #{notifyUrl,jdbcType=VARCHAR},
       </if>
+      <if test="notifyMethod != null">
+        #{notifyMethod,jdbcType=TINYINT},
+      </if>
       <if test="notifyHeader != null">
         #{notifyHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyParamType != null">
+        #{notifyParamType,jdbcType=TINYINT},
       </if>
       <if test="notifyTimeout != null">
         #{notifyTimeout,jdbcType=SMALLINT},
@@ -113,8 +129,8 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="notifyContent != null">
-        #{notifyContent,jdbcType=LONGVARCHAR},
+      <if test="notifyParam != null">
+        #{notifyParam,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -124,8 +140,14 @@
       <if test="notifyUrl != null">
         notify_url = #{notifyUrl,jdbcType=VARCHAR},
       </if>
+      <if test="notifyMethod != null">
+        notify_method = #{notifyMethod,jdbcType=TINYINT},
+      </if>
       <if test="notifyHeader != null">
         notify_header = #{notifyHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyParamType != null">
+        notify_param_type = #{notifyParamType,jdbcType=TINYINT},
       </if>
       <if test="notifyTimeout != null">
         notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
@@ -148,8 +170,8 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="notifyContent != null">
-        notify_content = #{notifyContent,jdbcType=LONGVARCHAR},
+      <if test="notifyParam != null">
+        notify_param = #{notifyParam,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -157,7 +179,9 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     update t_notify_record
     set notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      notify_method = #{notifyMethod,jdbcType=TINYINT},
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
+      notify_param_type = #{notifyParamType,jdbcType=TINYINT},
       notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
       notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},
@@ -165,13 +189,15 @@
       business_id = #{businessId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      notify_content = #{notifyContent,jdbcType=LONGVARCHAR}
+      notify_param = #{notifyParam,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     update t_notify_record
     set notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      notify_method = #{notifyMethod,jdbcType=TINYINT},
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
+      notify_param_type = #{notifyParamType,jdbcType=TINYINT},
       notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
       notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},

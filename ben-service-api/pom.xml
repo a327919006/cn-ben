@@ -60,6 +60,13 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+
+        <!-- modules -->
+        <dependency>
+            <groupId>com.gitee.nuliing</groupId>
+            <artifactId>ben-api</artifactId>
+            <version>${ben-api.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
