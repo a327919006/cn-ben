@@ -32,7 +32,7 @@ public class BenNotify {
     /**
      * 通知请求超时时长，单位：毫秒。默认5秒
      */
-    private int timeout = 5000;
+    private Short notifyTimeout = 5000;
 
     /**
      * 本次通知的业务名称

@@ -33,7 +33,7 @@ public class SampleController {
     @ApiOperation("测试-发送通知")
     @PostMapping("/test")
     public Object resend(@RequestBody TestMessage req) {
-        log.info("【sample】start -> " + req);
+        log.info("【sample】发送通知 -> " + req);
 
         // 构造通知对象
         BenNotify notify = new BenNotify();
@@ -46,7 +46,7 @@ public class SampleController {
         header.put("token", "123456");
         notify.setNotifyHeader(header);
         // 通知请求超时时长，单位：毫秒
-        notify.setTimeout(5000);
+        notify.setNotifyTimeout((short) 1000);
 
         // 本次通知的业务名称，非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用
         notify.setBusinessName("test");
@@ -58,7 +58,7 @@ public class SampleController {
         jmsMessagingTemplate.convertAndSend(queue, notify);
 
 
-        log.info("【sample】success");
+        log.info("【sample】发送通知成功");
         Map<String, Object> rsp = new HashMap<>();
         rsp.put("code", 1);
         rsp.put("msg", "SUCCESS");
@@ -68,9 +68,9 @@ public class SampleController {
     @ApiOperation("测试-接收通知")
     @PostMapping("/notify")
     public Object notify(@RequestBody TestMessage req, @RequestHeader String token) {
-        log.info("【sample】notify -> {}, token={}", req, token);
+        log.info("【sample】接收通知 -> {}, token={}", req, token);
 
-        log.info("【sample】success");
+        log.info("【sample】处理通知成功");
         return "SUCCESS";
     }
 }

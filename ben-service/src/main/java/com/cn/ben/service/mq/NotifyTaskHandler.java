@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.DelayQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * <p>Title:</p>
@@ -28,9 +29,9 @@ public class NotifyTaskHandler {
     @Autowired
     private DelayQueueConfig config;
 
-//    static {
-//        init();
-//    }
+    public NotifyTaskHandler(ThreadPoolExecutor singleThreadExecutor) {
+        init(singleThreadExecutor);
+    }
 
     /**
      * 添加通知任务
@@ -64,23 +65,27 @@ public class NotifyTaskHandler {
         return lastNotifyTime.plus(interval, ChronoUnit.MILLIS);
     }
 
-    private static void init() {
-        while (true) {
-            try {
-                NotifyTask task = delayQueue.take();
-                delayQueue.remove(task);
+    private void init(ThreadPoolExecutor singleThreadExecutor) {
+        log.info("【NotifyTaskHandler】开始初始化");
+        singleThreadExecutor.execute(() -> {
+            while (true) {
+                try {
+                    NotifyTask task = delayQueue.take();
+                    delayQueue.remove(task);
 
-                String result = HttpRequest.post(task.getNotifyUrl())
-                        .addHeaders(task.getNotifyHeader())
-                        .body(JSONUtil.toJsonStr(task.getNotifyContent()))
-                        .timeout(task.getNotifyTimeout())
-                        .execute()
-                        .body();
-                log.info("【NotifyQueue】处理消息成功 -> " + result);
+                    String result = HttpRequest.post(task.getNotifyUrl())
+                            .addHeaders(task.getNotifyHeader())
+                            .body(JSONUtil.toJsonStr(task.getNotifyContent()))
+                            .timeout(task.getNotifyTimeout())
+                            .execute()
+                            .body();
+                    log.info("【NotifyQueue】处理消息成功 -> " + result);
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        });
+        log.info("【NotifyTaskHandler】初始化成功");
     }
 }
