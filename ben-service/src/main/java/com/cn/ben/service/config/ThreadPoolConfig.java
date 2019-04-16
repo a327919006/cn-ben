@@ -26,7 +26,7 @@ public class ThreadPoolConfig {
     @Bean
     public ThreadPoolExecutor singleThreadExecutor() {
         // 为线程池起名
-        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNamePrefix("notify-task-handler").build();
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNamePrefix("task-handler").build();
         // 单线程线程池
         return new ThreadPoolExecutor(1,
                 1,

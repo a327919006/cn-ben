@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.concurrent.DelayQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -57,9 +58,15 @@ public class NotifyTaskHandler {
         singleThreadExecutor.execute(() -> {
             while (true) {
                 try {
-                    NotifyTask notifyTask = delayQueue.take();
-                    delayQueue.remove(notifyTask);
-                    taskExecutor.execute(() -> handleTask(notifyTask));
+                    log.info("【NotifyTaskHandler】ActiveCount={}", taskExecutor.getActiveCount());
+                    if (taskExecutor.getActiveCount() < taskExecutor.getMaximumPoolSize()) {
+                        NotifyTask notifyTask = delayQueue.take();
+                        taskExecutor.execute(() -> handleTask(notifyTask));
+                    } else {
+                        log.warn("【NotifyTaskHandler】注意：线程池耗尽，延时任务将产生堆积（1、调整服务器资源，考虑增加线程数。2、调整通知超时时间。）");
+                    }
+                } catch (RejectedExecutionException e) {
+                    log.error("【NotifyTaskHandler】", e);
                 } catch (Exception e) {
                     log.error("【NotifyTaskHandler】Exception：", e);
                 }
@@ -74,16 +81,12 @@ public class NotifyTaskHandler {
      * @param notifyTask 通知任务信息
      */
     public void addTask(NotifyTask notifyTask) {
-        int maxNotifyTimes = config.getInterval().size();
-        int currNotifyTimes = notifyTask.getNotifyTimes();
-        if (currNotifyTimes < maxNotifyTimes) {
+        boolean notifyFail = judgeNotifyTimes(notifyTask.getNotifyTimes());
+        if (!notifyFail) {
             LocalDateTime executeTime = getExecuteTime(notifyTask);
             notifyTask.setExecuteTime(executeTime);
             delayQueue.add(notifyTask);
-            log.info("【NotifyTaskHandler】添加任务到延时队列,id={}", notifyTask.getId());
-        } else {
-            updateNotifyStatus(notifyTask, NotifyStatusEnum.FAIL);
-            log.info("【NotifyTaskHandler】超过通知次数限制，标记为通知失败,id={}", notifyTask.getId());
+            log.info("【NotifyTaskHandler】添加任务到延时队列,id={},times={}", notifyTask.getId(), notifyTask.getNotifyTimes());
         }
     }
 
@@ -91,10 +94,11 @@ public class NotifyTaskHandler {
      * 处理通知
      */
     private void handleTask(NotifyTask notifyTask) {
-        log.info("【NotifyTask】开始处理通知,id={}" + notifyTask.getId());
+        log.info("【NotifyTask】开始通知,id={},times={}", notifyTask.getId(), notifyTask.getNotifyTimes());
         try {
             // 增加通知次数
             notifyTask.setNotifyTimes((short) (notifyTask.getNotifyTimes() + 1));
+            notifyTask.setUpdateTime(LocalDateTime.now());
 
             // 发送http请求
             HttpResponse response = sendNotify(notifyTask);
@@ -102,22 +106,22 @@ public class NotifyTaskHandler {
             if (response.isOk()) {
                 String result = response.body();
                 if ("SUCCESS".equals(result)) {
-                    updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
                     log.info("【NotifyTask】通知成功,id={},result={}", notifyTask.getId(), result);
+                    updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
                 } else {
-                    addTask(notifyTask);
-                    updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
                     log.info("【NotifyTask】业务方处理失败,id={},result={}", notifyTask.getId(), result);
+                    updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
+                    addTask(notifyTask);
                 }
             } else {
-                addTask(notifyTask);
+                log.info("【NotifyTask】通知请求失败,id={},code={}", notifyTask.getId(), response.getStatus());
                 updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
-                log.error("【NotifyTask】通知请求失败,id={},code={}", notifyTask.getId(), response.getStatus());
+                addTask(notifyTask);
             }
         } catch (Exception e) {
-            addTask(notifyTask);
-            updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
             log.error("【NotifyTask】通知请求异常,id=" + notifyTask.getId() + ":", e);
+            updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
+            addTask(notifyTask);
         }
         // TODO 添加通知日志
     }
@@ -198,17 +202,20 @@ public class NotifyTaskHandler {
         notifyRecord.setId(notifyTask.getId());
         if (notifyFail) {
             notifyRecord.setNotifyStatus(NotifyStatusEnum.FAIL.getValue());
+            log.info("【NotifyTask】超过通知次数限制，标记为通知失败,id={}", notifyTask.getId());
         } else {
             notifyRecord.setNotifyStatus(notifyStatus.getValue());
         }
         notifyRecord.setNotifyTimes(notifyTask.getNotifyTimes());
         notifyRecord.setUpdateTime(LocalDateTime.now());
         notifyRecordService.updateByPrimaryKeySelective(notifyRecord);
+        log.info("【NotifyTask】更新通知状态,id={},status={}", notifyRecord.getId(), notifyRecord.getNotifyStatus());
     }
 
     /**
      * 判断是否通知失败
-     * @param notifyStatus 通知状态
+     *
+     * @param notifyStatus    通知状态
      * @param currNotifyTimes 当前通知次数
      * @return 是否失败
      */
@@ -218,12 +225,18 @@ public class NotifyTaskHandler {
             return false;
         }
 
-        int maxNotifyTimes = config.getInterval().size();
+        return judgeNotifyTimes(currNotifyTimes);
+    }
 
-        if (currNotifyTimes < maxNotifyTimes) {
-            return false;
-        }
-        return true;
+    /**
+     * 判断通知次数是否到达上限
+     *
+     * @param currNotifyTimes 当前通知次数
+     * @return 是否到达上限
+     */
+    private boolean judgeNotifyTimes(int currNotifyTimes) {
+        int maxNotifyTimes = config.getInterval().size();
+        return currNotifyTimes >= maxNotifyTimes;
     }
 
     /**
