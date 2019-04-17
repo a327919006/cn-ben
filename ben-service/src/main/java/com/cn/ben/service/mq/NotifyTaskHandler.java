@@ -1,5 +1,6 @@
 package com.cn.ben.service.mq;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -65,10 +66,10 @@ public class NotifyTaskHandler {
                         NotifyTask notifyTask = delayQueue.take();
                         taskExecutor.execute(() -> handleTask(notifyTask));
                     } else {
-                        log.warn("【NotifyTaskHandler】注意：线程池耗尽，延时任务将产生堆积（1、调整服务器资源，考虑增加线程数。2、调整通知超时时间。）");
+                        handlerSleep();
                     }
                 } catch (RejectedExecutionException e) {
-                    log.error("【NotifyTaskHandler】", e);
+                    handlerSleep();
                 } catch (Exception e) {
                     log.error("【NotifyTaskHandler】Exception：", e);
                 }
@@ -272,5 +273,15 @@ public class NotifyTaskHandler {
         int currNotifyTimes = notifyTask.getNotifyTimes();
         long interval = config.getInterval().get(currNotifyTimes) * 60 * 1000 + 1;
         return lastNotifyTime.plus(interval, ChronoUnit.MILLIS);
+    }
+
+    /**
+     * 通知任务处理器睡眠
+     * 当处理通知任务的线程池耗尽时，通知任务处理器将根据配置睡眠一段时间
+     */
+    private void handlerSleep() {
+        // 线程池耗尽，延时任务将产生堆积（1、调整服务器资源，考虑增加线程数。2、调整通知超时时间。）
+        log.warn("【NotifyTaskHandler】注意：线程池耗尽，任务处理器将休眠{}毫秒", config.getHandlerSleep());
+        ThreadUtil.sleep(config.getHandlerSleep());
     }
 }

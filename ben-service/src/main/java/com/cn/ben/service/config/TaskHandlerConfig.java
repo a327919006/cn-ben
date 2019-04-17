@@ -37,6 +37,12 @@ public class TaskHandlerConfig {
     private Integer queueCapacity = 10;
 
     /**
+     * 处理器睡眠时间
+     * 当处理通知任务的线程池耗尽时，通知任务处理器将睡眠一段时间
+     */
+    private Integer handlerSleep = 1000;
+
+    /**
      * 重复通知时间间隔（单位：分钟）
      * 举例： [0, 1, 4, 10, 30, 60, 120, 360]
      * 第一次立即通知，如果业务方没有返回成功，则1分钟后再次通知。
