@@ -39,7 +39,7 @@ public class SampleController {
         // 发送通知-请求方式POST，请求参数类型Body
         sendNotify1(req);
         // 发送通知-请求方式POST，请求参数类型FORM表单
-//        sendNotify2(req);
+        sendNotify2(req);
         // 发送通知-请求方式GET
 //        sendNotify3(req);
 
@@ -97,6 +97,8 @@ public class SampleController {
         notify.setNotifyHeader(header);
         // 通知-请求超时时长，单位：毫秒
         notify.setNotifyTimeout((short) 1000);
+        // 通知-成功响应标识（http请求响应包含此内容时即通知成功）（设为空或空字符串时，http响应码为2xx即通知成功）
+        notify.setSuccessFlag("SUCCESS");
 
         // 本次通知的业务名称，非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用
         notify.setBusinessName("test");
@@ -128,6 +130,8 @@ public class SampleController {
         notify.setNotifyHeader(header);
         // 通知-请求超时时长，单位：毫秒
         notify.setNotifyTimeout((short) 1000);
+        // 通知-成功响应标识（http请求响应包含此内容时即通知成功）（设为空或空字符串时，http响应码为2xx即通知成功）
+        notify.setSuccessFlag("SUCCESS");
 
         // 本次通知的业务名称，非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用
         notify.setBusinessName("test");
@@ -157,6 +161,8 @@ public class SampleController {
         notify.setNotifyHeader(header);
         // 通知-请求超时时长，单位：毫秒
         notify.setNotifyTimeout((short) 1000);
+        // 通知-成功响应标识（http请求响应包含此内容时即通知成功）（设为空或空字符串时，http响应码为2xx即通知成功）
+        notify.setSuccessFlag("SUCCESS");
 
         // 本次通知的业务名称，非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用
         notify.setBusinessName("test");

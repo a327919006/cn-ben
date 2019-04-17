@@ -16,6 +16,8 @@ public class NotifyRecord implements Serializable {
 
     private Short notifyTimeout;
 
+    private String successFlag;
+
     private Short notifyTimes;
 
     private Byte notifyStatus;
@@ -76,6 +78,14 @@ public class NotifyRecord implements Serializable {
 
     public void setNotifyTimeout(Short notifyTimeout) {
         this.notifyTimeout = notifyTimeout;
+    }
+
+    public String getSuccessFlag() {
+        return successFlag;
+    }
+
+    public void setSuccessFlag(String successFlag) {
+        this.successFlag = successFlag;
     }
 
     public Short getNotifyTimes() {

@@ -43,6 +43,10 @@ public class BenNotify {
      * 通知-请求超时时长，单位：毫秒。默认5秒
      */
     private Short notifyTimeout = 5000;
+    /**
+     * 通知-成功响应标识（http请求响应包含此内容时即通知成功）（设为空或空字符串时，http响应码为2xx即通知成功）
+     */
+    private String successFlag;
 
     /**
      * 本次通知的业务名称

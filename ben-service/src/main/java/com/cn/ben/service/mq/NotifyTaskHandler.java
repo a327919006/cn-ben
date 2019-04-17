@@ -1,5 +1,6 @@
 package com.cn.ben.service.mq;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
@@ -48,6 +49,7 @@ public class NotifyTaskHandler {
         this.singleThreadExecutor = singleThreadExecutor;
         this.taskExecutor = taskExecutor;
         init();
+        // TODO 从数据库中加载未完成的通知记录，继续通知
     }
 
     /**
@@ -96,27 +98,18 @@ public class NotifyTaskHandler {
     private void handleTask(NotifyTask notifyTask) {
         log.info("【NotifyTask】开始通知,id={},times={}", notifyTask.getId(), notifyTask.getNotifyTimes());
         try {
-            // 增加通知次数
+            // 修改任务的通知次数与最近通知时间
             notifyTask.setNotifyTimes((short) (notifyTask.getNotifyTimes() + 1));
             notifyTask.setUpdateTime(LocalDateTime.now());
 
-            // 发送http请求
+            // 发送Http请求
             HttpResponse response = sendNotify(notifyTask);
 
+            // 判断Http请求状态码
             if (response.isOk()) {
-                String result = response.body();
-                if ("SUCCESS".equals(result)) {
-                    log.info("【NotifyTask】通知成功,id={},result={}", notifyTask.getId(), result);
-                    updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
-                } else {
-                    log.info("【NotifyTask】业务方处理失败,id={},result={}", notifyTask.getId(), result);
-                    updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
-                    addTask(notifyTask);
-                }
+                handleRequestSuccess(response, notifyTask);
             } else {
-                log.info("【NotifyTask】通知请求失败,id={},code={}", notifyTask.getId(), response.getStatus());
-                updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
-                addTask(notifyTask);
+                handleRequestFail(response, notifyTask);
             }
         } catch (Exception e) {
             log.error("【NotifyTask】通知请求异常,id=" + notifyTask.getId() + ":", e);
@@ -124,6 +117,35 @@ public class NotifyTaskHandler {
             addTask(notifyTask);
         }
         // TODO 添加通知日志
+    }
+
+    /**
+     * 处理通知Http请求成功
+     */
+    private void handleRequestSuccess(HttpResponse response, NotifyTask notifyTask) {
+        String result = response.body();
+        // 通知成功标识
+        // 1、上层业务系统未指定成功标识，则只需Http状态码为2xx，即通知成功
+        // 2、上层业务系统已指定成功标识，则响应内容中需包含成功标识，即通知成功
+        boolean successFlag = StrUtil.isBlank(notifyTask.getSuccessFlag())
+                || StrUtil.containsAnyIgnoreCase(notifyTask.getSuccessFlag(), result);
+        if (successFlag) {
+            log.info("【NotifyTask】通知成功,id={},result={}", notifyTask.getId(), result);
+            updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
+        } else {
+            log.info("【NotifyTask】业务方处理失败,id={},result={}", notifyTask.getId(), result);
+            updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
+            addTask(notifyTask);
+        }
+    }
+
+    /**
+     * 处理通知Http请求失败
+     */
+    private void handleRequestFail(HttpResponse response, NotifyTask notifyTask) {
+        log.info("【NotifyTask】通知请求失败,id={},code={}", notifyTask.getId(), response.getStatus());
+        updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
+        addTask(notifyTask);
     }
 
     /**

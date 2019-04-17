@@ -8,6 +8,7 @@
     <result column="notify_header" jdbcType="VARCHAR" property="notifyHeader" />
     <result column="notify_param_type" jdbcType="TINYINT" property="notifyParamType" />
     <result column="notify_timeout" jdbcType="SMALLINT" property="notifyTimeout" />
+    <result column="success_flag" jdbcType="VARCHAR" property="successFlag" />
     <result column="notify_times" jdbcType="SMALLINT" property="notifyTimes" />
     <result column="notify_status" jdbcType="TINYINT" property="notifyStatus" />
     <result column="business_name" jdbcType="VARCHAR" property="businessName" />
@@ -20,7 +21,8 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, notify_url, notify_method, notify_header, notify_param_type, notify_timeout, 
-    notify_times, notify_status, business_name, business_id, create_time, update_time
+    success_flag, notify_times, notify_status, business_name, business_id, create_time, 
+    update_time
   </sql>
   <sql id="Blob_Column_List">
     notify_param
@@ -40,14 +42,14 @@
   <insert id="insert" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     insert into t_notify_record (id, notify_url, notify_method, 
       notify_header, notify_param_type, notify_timeout, 
-      notify_times, notify_status, business_name, 
-      business_id, create_time, update_time, 
-      notify_param)
+      success_flag, notify_times, notify_status, 
+      business_name, business_id, create_time, 
+      update_time, notify_param)
     values (#{id,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, #{notifyMethod,jdbcType=TINYINT}, 
       #{notifyHeader,jdbcType=VARCHAR}, #{notifyParamType,jdbcType=TINYINT}, #{notifyTimeout,jdbcType=SMALLINT}, 
-      #{notifyTimes,jdbcType=SMALLINT}, #{notifyStatus,jdbcType=TINYINT}, #{businessName,jdbcType=VARCHAR}, 
-      #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{notifyParam,jdbcType=LONGVARCHAR})
+      #{successFlag,jdbcType=VARCHAR}, #{notifyTimes,jdbcType=SMALLINT}, #{notifyStatus,jdbcType=TINYINT}, 
+      #{businessName,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{notifyParam,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cn.ben.api.model.po.NotifyRecord">
     insert into t_notify_record
@@ -69,6 +71,9 @@
       </if>
       <if test="notifyTimeout != null">
         notify_timeout,
+      </if>
+      <if test="successFlag != null">
+        success_flag,
       </if>
       <if test="notifyTimes != null">
         notify_times,
@@ -111,6 +116,9 @@
       <if test="notifyTimeout != null">
         #{notifyTimeout,jdbcType=SMALLINT},
       </if>
+      <if test="successFlag != null">
+        #{successFlag,jdbcType=VARCHAR},
+      </if>
       <if test="notifyTimes != null">
         #{notifyTimes,jdbcType=SMALLINT},
       </if>
@@ -152,6 +160,9 @@
       <if test="notifyTimeout != null">
         notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
       </if>
+      <if test="successFlag != null">
+        success_flag = #{successFlag,jdbcType=VARCHAR},
+      </if>
       <if test="notifyTimes != null">
         notify_times = #{notifyTimes,jdbcType=SMALLINT},
       </if>
@@ -183,6 +194,7 @@
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
       notify_param_type = #{notifyParamType,jdbcType=TINYINT},
       notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
+      success_flag = #{successFlag,jdbcType=VARCHAR},
       notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},
       business_name = #{businessName,jdbcType=VARCHAR},
@@ -199,6 +211,7 @@
       notify_header = #{notifyHeader,jdbcType=VARCHAR},
       notify_param_type = #{notifyParamType,jdbcType=TINYINT},
       notify_timeout = #{notifyTimeout,jdbcType=SMALLINT},
+      success_flag = #{successFlag,jdbcType=VARCHAR},
       notify_times = #{notifyTimes,jdbcType=SMALLINT},
       notify_status = #{notifyStatus,jdbcType=TINYINT},
       business_name = #{businessName,jdbcType=VARCHAR},
