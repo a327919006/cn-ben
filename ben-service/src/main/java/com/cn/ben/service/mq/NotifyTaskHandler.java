@@ -9,12 +9,11 @@ import com.cn.ben.api.enums.MethodEnum;
 import com.cn.ben.api.enums.NotifyStatusEnum;
 import com.cn.ben.api.enums.ParamTypeEnum;
 import com.cn.ben.api.model.dto.NotifyTask;
-import com.cn.ben.api.model.po.NotifyRecord;
+import com.cn.ben.api.service.INotifyLogService;
 import com.cn.ben.api.service.INotifyRecordService;
 import com.cn.ben.service.config.TaskHandlerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -37,18 +36,23 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class NotifyTaskHandler {
     private static DelayQueue<NotifyTask> delayQueue = new DelayQueue<>();
 
-    @Autowired
-    private TaskHandlerConfig config;
     @Reference
     private INotifyRecordService notifyRecordService;
+    @Reference
+    private INotifyLogService notifyLogService;
 
     private ThreadPoolExecutor singleThreadExecutor;
     private ThreadPoolExecutor taskExecutor;
+    private TaskHandlerConfig config;
+    private int maxNotifyTimes;
 
     public NotifyTaskHandler(ThreadPoolExecutor singleThreadExecutor,
-                             ThreadPoolExecutor taskExecutor) {
+                             ThreadPoolExecutor taskExecutor,
+                             TaskHandlerConfig config) {
         this.singleThreadExecutor = singleThreadExecutor;
         this.taskExecutor = taskExecutor;
+        this.config = config;
+        this.maxNotifyTimes = config.getInterval().size();
         init();
         // TODO 从数据库中加载未完成的通知记录，继续通知
     }
@@ -61,7 +65,7 @@ public class NotifyTaskHandler {
         singleThreadExecutor.execute(() -> {
             while (true) {
                 try {
-                    log.info("【NotifyTaskHandler】ActiveCount={}", taskExecutor.getActiveCount());
+                    log.debug("【NotifyTaskHandler】ActiveCount={}", taskExecutor.getActiveCount());
                     if (taskExecutor.getActiveCount() < taskExecutor.getMaximumPoolSize()) {
                         NotifyTask notifyTask = delayQueue.take();
                         taskExecutor.execute(() -> handleTask(notifyTask));
@@ -84,7 +88,7 @@ public class NotifyTaskHandler {
      * @param notifyTask 通知任务信息
      */
     public void addTask(NotifyTask notifyTask) {
-        boolean notifyFail = judgeNotifyTimes(notifyTask.getNotifyTimes());
+        boolean notifyFail = notifyTask.getNotifyTimes() >= maxNotifyTimes;
         if (!notifyFail) {
             LocalDateTime executeTime = getExecuteTime(notifyTask);
             notifyTask.setExecuteTime(executeTime);
@@ -113,9 +117,7 @@ public class NotifyTaskHandler {
                 handleRequestFail(response, notifyTask);
             }
         } catch (Exception e) {
-            log.error("【NotifyTask】通知请求异常,id=" + notifyTask.getId() + ":", e);
-            updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
-            addTask(notifyTask);
+            handleRequestError(e, notifyTask);
         }
         // TODO 添加通知日志
     }
@@ -132,12 +134,14 @@ public class NotifyTaskHandler {
                 || StrUtil.containsAnyIgnoreCase(notifyTask.getSuccessFlag(), result);
         if (successFlag) {
             log.info("【NotifyTask】通知成功,id={},result={}", notifyTask.getId(), result);
-            updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
+            notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
         } else {
             log.info("【NotifyTask】业务方处理失败,id={},result={}", notifyTask.getId(), result);
-            updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
+            notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
             addTask(notifyTask);
         }
+
+        notifyLogService.insertNotifyLog(notifyTask, response.getStatus(), result);
     }
 
     /**
@@ -145,8 +149,21 @@ public class NotifyTaskHandler {
      */
     private void handleRequestFail(HttpResponse response, NotifyTask notifyTask) {
         log.info("【NotifyTask】通知请求失败,id={},code={}", notifyTask.getId(), response.getStatus());
-        updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
+        notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
         addTask(notifyTask);
+
+        notifyLogService.insertNotifyLog(notifyTask, response.getStatus());
+    }
+
+    /**
+     * 处理通知Http请求失败
+     */
+    private void handleRequestError(Exception e, NotifyTask notifyTask) {
+        log.error("【NotifyTask】通知请求异常,id=" + notifyTask.getId() + ":", e);
+        notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
+        addTask(notifyTask);
+
+        notifyLogService.insertNotifyLog(notifyTask, e.getMessage());
     }
 
     /**
@@ -210,56 +227,6 @@ public class NotifyTaskHandler {
             default:
                 return httpRequest.form(param);
         }
-    }
-
-    /**
-     * 更新通知记录状态
-     *
-     * @param notifyTask   通知信息
-     * @param notifyStatus 状态
-     */
-    private void updateNotifyStatus(NotifyTask notifyTask, NotifyStatusEnum notifyStatus) {
-        boolean notifyFail = judgeNotifyFail(notifyStatus, notifyTask.getNotifyTimes());
-
-        NotifyRecord notifyRecord = new NotifyRecord();
-        notifyRecord.setId(notifyTask.getId());
-        if (notifyFail) {
-            notifyRecord.setNotifyStatus(NotifyStatusEnum.FAIL.getValue());
-            log.info("【NotifyTask】超过通知次数限制，标记为通知失败,id={}", notifyTask.getId());
-        } else {
-            notifyRecord.setNotifyStatus(notifyStatus.getValue());
-        }
-        notifyRecord.setNotifyTimes(notifyTask.getNotifyTimes());
-        notifyRecord.setUpdateTime(LocalDateTime.now());
-        notifyRecordService.updateByPrimaryKeySelective(notifyRecord);
-        log.info("【NotifyTask】更新通知状态,id={},status={}", notifyRecord.getId(), notifyRecord.getNotifyStatus());
-    }
-
-    /**
-     * 判断是否通知失败
-     *
-     * @param notifyStatus    通知状态
-     * @param currNotifyTimes 当前通知次数
-     * @return 是否失败
-     */
-    private boolean judgeNotifyFail(NotifyStatusEnum notifyStatus, int currNotifyTimes) {
-        if (notifyStatus == NotifyStatusEnum.WAIT
-                || notifyStatus == NotifyStatusEnum.SUCCESS) {
-            return false;
-        }
-
-        return judgeNotifyTimes(currNotifyTimes);
-    }
-
-    /**
-     * 判断通知次数是否到达上限
-     *
-     * @param currNotifyTimes 当前通知次数
-     * @return 是否到达上限
-     */
-    private boolean judgeNotifyTimes(int currNotifyTimes) {
-        int maxNotifyTimes = config.getInterval().size();
-        return currNotifyTimes >= maxNotifyTimes;
     }
 
     /**

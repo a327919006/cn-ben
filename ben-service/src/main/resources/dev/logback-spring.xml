@@ -52,7 +52,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="fileWARNLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
         </filter>
@@ -65,7 +65,7 @@
         <File>${logback.logdir}/${logback.appname}/warn/warn.log</File>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${logback.logdir}/${logback.appname}/error/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>${logback.logdir}/${logback.appname}/warn/warn.%d{yyyy-MM-dd}.log</FileNamePattern>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
     </appender>

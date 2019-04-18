@@ -42,8 +42,8 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>-->
 
-        <table tableName="t_notify_record" enableSelectByExample="false"
+        <table tableName="t_notify_log" enableSelectByExample="false"
                enableDeleteByExample="false" enableCountByExample="false"
-               enableUpdateByExample="false" domainObjectName="NotifyRecord"/>
+               enableUpdateByExample="false" domainObjectName="NotifyLog"/>
     </context>
 </generatorConfiguration>

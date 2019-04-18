@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.ben.dal.mapper.NotifyLogMapper">
+  <resultMap id="BaseResultMap" type="com.cn.ben.api.model.po.NotifyLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="notify_id" jdbcType="VARCHAR" property="notifyId" />
+    <result column="http_status" jdbcType="INTEGER" property="httpStatus" />
+    <result column="http_response" jdbcType="VARCHAR" property="httpResponse" />
+    <result column="http_exception" jdbcType="VARCHAR" property="httpException" />
+    <result column="business_name" jdbcType="VARCHAR" property="businessName" />
+    <result column="business_id" jdbcType="VARCHAR" property="businessId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, notify_id, http_status, http_response, http_exception, business_name, business_id, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_notify_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_notify_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cn.ben.api.model.po.NotifyLog">
+    insert into t_notify_log (id, notify_id, http_status, 
+      http_response, http_exception, business_name, 
+      business_id, create_time)
+    values (#{id,jdbcType=BIGINT}, #{notifyId,jdbcType=VARCHAR}, #{httpStatus,jdbcType=INTEGER}, 
+      #{httpResponse,jdbcType=VARCHAR}, #{httpException,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, 
+      #{businessId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.ben.api.model.po.NotifyLog">
+    insert into t_notify_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="notifyId != null">
+        notify_id,
+      </if>
+      <if test="httpStatus != null">
+        http_status,
+      </if>
+      <if test="httpResponse != null">
+        http_response,
+      </if>
+      <if test="httpException != null">
+        http_exception,
+      </if>
+      <if test="businessName != null">
+        business_name,
+      </if>
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="notifyId != null">
+        #{notifyId,jdbcType=VARCHAR},
+      </if>
+      <if test="httpStatus != null">
+        #{httpStatus,jdbcType=INTEGER},
+      </if>
+      <if test="httpResponse != null">
+        #{httpResponse,jdbcType=VARCHAR},
+      </if>
+      <if test="httpException != null">
+        #{httpException,jdbcType=VARCHAR},
+      </if>
+      <if test="businessName != null">
+        #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        #{businessId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.ben.api.model.po.NotifyLog">
+    update t_notify_log
+    <set>
+      <if test="notifyId != null">
+        notify_id = #{notifyId,jdbcType=VARCHAR},
+      </if>
+      <if test="httpStatus != null">
+        http_status = #{httpStatus,jdbcType=INTEGER},
+      </if>
+      <if test="httpResponse != null">
+        http_response = #{httpResponse,jdbcType=VARCHAR},
+      </if>
+      <if test="httpException != null">
+        http_exception = #{httpException,jdbcType=VARCHAR},
+      </if>
+      <if test="businessName != null">
+        business_name = #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.ben.api.model.po.NotifyLog">
+    update t_notify_log
+    set notify_id = #{notifyId,jdbcType=VARCHAR},
+      http_status = #{httpStatus,jdbcType=INTEGER},
+      http_response = #{httpResponse,jdbcType=VARCHAR},
+      http_exception = #{httpException,jdbcType=VARCHAR},
+      business_name = #{businessName,jdbcType=VARCHAR},
+      business_id = #{businessId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
