@@ -31,4 +31,12 @@ public class Constants {
      * Queue
      */
     public static final String QUEUE_NOTIFY = "notify.queue";
+
+    /**
+     * key
+     */
+    public static final String KEY_PAGE_NUM = "pageNum";
+    public static final String KEY_PAGE_SIZE = "pageSize";
+    public static final String KEY_COUNT = "count";
+    public static final String KEY_ORDER_BY = "orderBy";
 }

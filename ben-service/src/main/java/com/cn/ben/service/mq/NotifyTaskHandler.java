@@ -8,16 +8,21 @@ import cn.hutool.json.JSONUtil;
 import com.cn.ben.api.enums.MethodEnum;
 import com.cn.ben.api.enums.NotifyStatusEnum;
 import com.cn.ben.api.enums.ParamTypeEnum;
+import com.cn.ben.api.model.dto.NotifyRecordDto;
 import com.cn.ben.api.model.dto.NotifyTask;
+import com.cn.ben.api.model.po.NotifyRecord;
 import com.cn.ben.api.service.INotifyLogService;
 import com.cn.ben.api.service.INotifyRecordService;
+import com.cn.ben.api.utils.BenUtils;
 import com.cn.ben.service.config.TaskHandlerConfig;
+import com.github.pagehelper.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -54,7 +59,64 @@ public class NotifyTaskHandler {
         this.config = config;
         this.maxNotifyTimes = config.getInterval().size();
         init();
-        // TODO 从数据库中加载未完成的通知记录，继续通知
+        resumeNotify();
+    }
+
+    /**
+     * 从数据库中加载未完成的通知记录，继续通知
+     */
+    private void resumeNotify() {
+        taskExecutor.execute(() -> {
+            ThreadUtil.sleep(5000);
+            log.info("【ResumeNotify】开始恢复未完成的通知");
+            // 设置通知记录查询条件
+            NotifyRecordDto condition = new NotifyRecordDto();
+            condition.setNotifying(1);
+
+            int pageSize = 10;
+            // 计数标识，首页需要获取记录总数
+            boolean countFlag = true;
+            int totalPage = 0;
+
+            for (int pageNum = 1; ; pageNum++) {
+                // 分页查询通知记录
+                Page<NotifyRecord> page = getPage(condition, pageNum, pageSize, countFlag);
+                List<NotifyRecord> list = page.getResult();
+                log.info("【ResumeNotify】共需恢复{}个任务", page.getTotal());
+
+                for (NotifyRecord notifyRecord : list) {
+                    log.info("【ResumeNotify】id={}", notifyRecord.getId());
+                    // TODO 判断通知次数是否到达上限，如果到达则更新为通知失败，否则加入任务队列
+                    NotifyTask notifyTask = BenUtils.coverToNotifyTask(notifyRecord);
+                    addTask(notifyTask);
+                }
+
+                if (countFlag) {
+                    countFlag = false;
+                    totalPage = page.getPages();
+                }
+                if (pageNum >= totalPage) {
+                    break;
+                }
+            }
+            log.info("【NotifyTaskHandler】恢复未完成的通知成功");
+        });
+    }
+
+    /**
+     * 获取分页消息
+     *
+     * @param condition 筛选条件
+     * @param pageNum   页码
+     * @param pageSize  数量
+     * @param countFlag 是否获取总数
+     * @return 本页消息
+     */
+    private Page<NotifyRecord> getPage(NotifyRecordDto condition, int pageNum, int pageSize, boolean countFlag) {
+        condition.setPageNum(pageNum);
+        condition.setPageSize(pageSize);
+        condition.setCount(countFlag);
+        return notifyRecordService.listPage(condition);
     }
 
     /**
@@ -119,7 +181,6 @@ public class NotifyTaskHandler {
         } catch (Exception e) {
             handleRequestError(e, notifyTask);
         }
-        // TODO 添加通知日志
     }
 
     /**
@@ -137,8 +198,10 @@ public class NotifyTaskHandler {
             notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
         } else {
             log.info("【NotifyTask】业务方处理失败,id={},result={}", notifyTask.getId(), result);
-            notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
-            addTask(notifyTask);
+            boolean notifyFail = notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
+            if (!notifyFail) {
+                addTask(notifyTask);
+            }
         }
 
         notifyLogService.insertNotifyLog(notifyTask, response.getStatus(), result);
@@ -149,8 +212,10 @@ public class NotifyTaskHandler {
      */
     private void handleRequestFail(HttpResponse response, NotifyTask notifyTask) {
         log.info("【NotifyTask】通知请求失败,id={},code={}", notifyTask.getId(), response.getStatus());
-        notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
-        addTask(notifyTask);
+        boolean notifyFail = notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
+        if (!notifyFail) {
+            addTask(notifyTask);
+        }
 
         notifyLogService.insertNotifyLog(notifyTask, response.getStatus());
     }
@@ -160,8 +225,10 @@ public class NotifyTaskHandler {
      */
     private void handleRequestError(Exception e, NotifyTask notifyTask) {
         log.error("【NotifyTask】通知请求异常,id=" + notifyTask.getId() + ":", e);
-        notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
-        addTask(notifyTask);
+        boolean notifyFail = notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.REQUEST_FAIL);
+        if (!notifyFail) {
+            addTask(notifyTask);
+        }
 
         notifyLogService.insertNotifyLog(notifyTask, e.getMessage());
     }

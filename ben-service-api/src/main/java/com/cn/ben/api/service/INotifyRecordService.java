@@ -15,6 +15,7 @@ public interface INotifyRecordService extends IBaseService<NotifyRecord, String>
      *
      * @param notifyTask   通知信息
      * @param notifyStatus 状态
+     * @return 是否已经超过通知次数上限 true是 false否
      */
-    void updateNotifyStatus(NotifyTask notifyTask, NotifyStatusEnum notifyStatus);
+    boolean updateNotifyStatus(NotifyTask notifyTask, NotifyStatusEnum notifyStatus);
 }

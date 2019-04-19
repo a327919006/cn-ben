@@ -6,8 +6,6 @@ import com.cn.ben.api.model.po.NotifyRecord;
 import com.cn.ben.api.service.INotifyRecordService;
 import com.cn.ben.dal.mapper.NotifyRecordMapper;
 import com.cn.ben.service.config.TaskHandlerConfig;
-import com.cn.ben.service.impl.BaseServiceImpl;
-import com.cn.ben.service.mq.NotifyTaskHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class NotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapper,
     private TaskHandlerConfig config;
 
     @Override
-    public void updateNotifyStatus(NotifyTask notifyTask, NotifyStatusEnum notifyStatus) {
+    public boolean updateNotifyStatus(NotifyTask notifyTask, NotifyStatusEnum notifyStatus) {
         boolean notifyFail = judgeNotifyFail(notifyStatus, notifyTask.getNotifyTimes());
 
         NotifyRecord notifyRecord = new NotifyRecord();
@@ -42,6 +40,7 @@ public class NotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapper,
         notifyRecord.setUpdateTime(LocalDateTime.now());
         mapper.updateByPrimaryKeySelective(notifyRecord);
         log.info("【NotifyTask】更新通知状态,id={},status={}", notifyRecord.getId(), notifyRecord.getNotifyStatus());
+        return notifyFail;
     }
 
     /**

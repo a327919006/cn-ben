@@ -84,7 +84,7 @@ public class SampleController {
         // 构造通知对象
         BenNotify notify = new BenNotify();
         // 通知-请求地址
-        notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify/post/body");
+        notify.setNotifyUrl("http://3thpartyconsign-test.sto-express.cn:8111/stoPlatform/track/tmsTrace!getTraceNotify.action");
         // 通知-请求方式
         notify.setNotifyMethod(MethodEnum.POST);
         // 通知-请求参数

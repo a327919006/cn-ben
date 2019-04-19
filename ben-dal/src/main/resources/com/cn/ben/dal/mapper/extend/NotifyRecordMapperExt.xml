@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.ben.dal.mapper.NotifyRecordMapper">
+
+    <select id="listByCondition" resultMap="ResultMapWithBLOBs">
+        SELECT
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        FROM t_notify_record
+        WHERE 1=1
+        <if test="notifying != null">
+            AND notify_status IN (0, 2, 3)
+        </if>
+    </select>
+</mapper>

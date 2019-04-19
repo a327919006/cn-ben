@@ -21,4 +21,15 @@ public enum ParamTypeEnum {
     public byte getValue() {
         return value;
     }
+
+    public static ParamTypeEnum parse(byte value) {
+        switch (value) {
+            case 0:
+                return FORM;
+            case 1:
+                return BODY;
+            default:
+                return FORM;
+        }
+    }
 }

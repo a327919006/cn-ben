@@ -101,4 +101,12 @@ public interface IBaseService<T, PK> {
      * @return 对象列表
      */
     List<T> listByCondition(Object record);
+
+    /**
+     * 分页获取列表
+     *
+     * @param record 参数
+     * @return 对象列表
+     */
+    Page<T> listPage(Object record);
 }
