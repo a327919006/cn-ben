@@ -39,92 +39,53 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Component
 @Slf4j
 public class NotifyTaskHandler {
-    private static DelayQueue<NotifyTask> delayQueue = new DelayQueue<>();
-
     @Reference
     private INotifyRecordService notifyRecordService;
     @Reference
     private INotifyLogService notifyLogService;
 
-    private ThreadPoolExecutor singleThreadExecutor;
+    /**
+     * 延时任务队列
+     */
+    private static DelayQueue<NotifyTask> delayQueue = new DelayQueue<>();
+    /**
+     * 监听通知任务队列-单线程线程池
+     */
+    private ThreadPoolExecutor handlerExecutor;
+    /**
+     * 恢复通知任务-单线程线程池
+     */
+    private ThreadPoolExecutor resumeExecutor;
+    /**
+     * 执行通知任务线程池
+     */
     private ThreadPoolExecutor taskExecutor;
+    /**
+     * 任务处理器配置
+     */
     private TaskHandlerConfig config;
+    /**
+     * 最大通知次数
+     */
     private int maxNotifyTimes;
 
-    public NotifyTaskHandler(ThreadPoolExecutor singleThreadExecutor,
+    public NotifyTaskHandler(ThreadPoolExecutor handlerExecutor,
+                             ThreadPoolExecutor resumeExecutor,
                              ThreadPoolExecutor taskExecutor,
                              TaskHandlerConfig config) {
-        this.singleThreadExecutor = singleThreadExecutor;
+        this.handlerExecutor = handlerExecutor;
+        this.resumeExecutor = resumeExecutor;
         this.taskExecutor = taskExecutor;
         this.config = config;
         this.maxNotifyTimes = config.getInterval().size();
-        init();
-        resumeNotify();
-    }
-
-    /**
-     * 从数据库中加载未完成的通知记录，继续通知
-     */
-    private void resumeNotify() {
-        taskExecutor.execute(() -> {
-            ThreadUtil.sleep(5000);
-            log.info("【ResumeNotify】开始恢复未完成的通知");
-            // 设置通知记录查询条件
-            NotifyRecordDto condition = new NotifyRecordDto();
-            condition.setNotifying(1);
-
-            int pageSize = 10;
-            // 计数标识，首页需要获取记录总数
-            boolean countFlag = true;
-            int totalPage = 0;
-
-            for (int pageNum = 1; ; pageNum++) {
-                // 分页查询通知记录
-                Page<NotifyRecord> page = getPage(condition, pageNum, pageSize, countFlag);
-                List<NotifyRecord> list = page.getResult();
-                log.info("【ResumeNotify】共需恢复{}个任务", page.getTotal());
-
-                for (NotifyRecord notifyRecord : list) {
-                    log.info("【ResumeNotify】id={}", notifyRecord.getId());
-                    // TODO 判断通知次数是否到达上限，如果到达则更新为通知失败，否则加入任务队列
-                    NotifyTask notifyTask = BenUtils.coverToNotifyTask(notifyRecord);
-                    addTask(notifyTask);
-                }
-
-                if (countFlag) {
-                    countFlag = false;
-                    totalPage = page.getPages();
-                }
-                if (pageNum >= totalPage) {
-                    break;
-                }
-            }
-            log.info("【NotifyTaskHandler】恢复未完成的通知成功");
-        });
-    }
-
-    /**
-     * 获取分页消息
-     *
-     * @param condition 筛选条件
-     * @param pageNum   页码
-     * @param pageSize  数量
-     * @param countFlag 是否获取总数
-     * @return 本页消息
-     */
-    private Page<NotifyRecord> getPage(NotifyRecordDto condition, int pageNum, int pageSize, boolean countFlag) {
-        condition.setPageNum(pageNum);
-        condition.setPageSize(pageSize);
-        condition.setCount(countFlag);
-        return notifyRecordService.listPage(condition);
     }
 
     /**
      * 通知任务处理器初始化
      */
-    private void init() {
+    public void init() {
         log.info("【NotifyTaskHandler】开始初始化");
-        singleThreadExecutor.execute(() -> {
+        handlerExecutor.execute(() -> {
             while (true) {
                 try {
                     log.debug("【NotifyTaskHandler】ActiveCount={}", taskExecutor.getActiveCount());
@@ -142,6 +103,48 @@ public class NotifyTaskHandler {
             }
         });
         log.info("【NotifyTaskHandler】初始化成功");
+    }
+
+    /**
+     * 从数据库中加载未完成的通知记录，继续通知
+     */
+    public void startResumeNotify() {
+        resumeExecutor.execute(() -> {
+            try {
+                log.info("【ResumeNotify】开始恢复未完成的通知");
+                // 设置通知记录查询条件
+                NotifyRecordDto condition = new NotifyRecordDto();
+                condition.setNotifying(1);
+
+                int pageSize = 10;
+                // 计数标识，首页需要获取记录总数
+                boolean countFlag = true;
+                int totalPage = 0;
+
+                for (int pageNum = 1; ; pageNum++) {
+                    // 分页查询通知记录
+                    Page<NotifyRecord> page = getPage(condition, pageNum, pageSize, countFlag);
+                    List<NotifyRecord> list = page.getResult();
+                    log.info("【ResumeNotify】共需恢复{}个任务", page.getTotal());
+
+                    for (NotifyRecord notifyRecord : list) {
+                        resumeNotify(notifyRecord);
+                    }
+
+                    if (countFlag) {
+                        countFlag = false;
+                        totalPage = page.getPages();
+                    }
+                    if (pageNum >= totalPage) {
+                        break;
+                    }
+                }
+                log.info("【ResumeNotify】恢复未完成的通知成功");
+                resumeExecutor.shutdown();
+            } catch (Exception e) {
+                log.error("【ResumeNotify】异常", e);
+            }
+        });
     }
 
     /**
@@ -317,5 +320,42 @@ public class NotifyTaskHandler {
         // 线程池耗尽，延时任务将产生堆积（1、调整服务器资源，考虑增加线程数。2、调整通知超时时间。）
         log.warn("【NotifyTaskHandler】注意：线程池耗尽，任务处理器将休眠{}毫秒", config.getHandlerSleep());
         ThreadUtil.sleep(config.getHandlerSleep());
+    }
+
+    /**
+     * 恢复通知任务
+     *
+     * @param notifyRecord 通知记录
+     */
+    private void resumeNotify(NotifyRecord notifyRecord) {
+        try {
+            log.info("【ResumeNotify】id={}", notifyRecord.getId());
+            boolean notifyFail = notifyRecord.getNotifyTimes() >= config.getInterval().size();
+            if (notifyFail) {
+                log.info("【ResumeNotify】notifyFail, id={}", notifyRecord.getId());
+                notifyRecordService.updateNotifyStatus(notifyRecord, NotifyStatusEnum.FAIL);
+            } else {
+                NotifyTask notifyTask = BenUtils.coverToNotifyTask(notifyRecord);
+                addTask(notifyTask);
+            }
+        } catch (Exception e) {
+            log.error("【resumeNotify】异常，id=" + notifyRecord.getId(), e);
+        }
+    }
+
+    /**
+     * 获取分页消息
+     *
+     * @param condition 筛选条件
+     * @param pageNum   页码
+     * @param pageSize  数量
+     * @param countFlag 是否获取总数
+     * @return 本页消息
+     */
+    private Page<NotifyRecord> getPage(NotifyRecordDto condition, int pageNum, int pageSize, boolean countFlag) {
+        condition.setPageNum(pageNum);
+        condition.setPageSize(pageSize);
+        condition.setCount(countFlag);
+        return notifyRecordService.listPage(condition);
     }
 }

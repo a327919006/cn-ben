@@ -39,7 +39,7 @@ public class SampleController {
         // 发送通知-请求方式POST，请求参数类型Body
         sendNotify1(req);
         // 发送通知-请求方式POST，请求参数类型FORM表单
-        sendNotify2(req);
+//        sendNotify2(req);
         // 发送通知-请求方式GET
 //        sendNotify3(req);
 
@@ -84,7 +84,7 @@ public class SampleController {
         // 构造通知对象
         BenNotify notify = new BenNotify();
         // 通知-请求地址
-        notify.setNotifyUrl("http://3thpartyconsign-test.sto-express.cn:8111/stoPlatform/track/tmsTrace!getTraceNotify.action");
+        notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify/post/body");
         // 通知-请求方式
         notify.setNotifyMethod(MethodEnum.POST);
         // 通知-请求参数

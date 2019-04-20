@@ -23,9 +23,13 @@ public class ThreadPoolConfig {
     @Autowired
     private TaskHandlerConfig config;
 
+    /**
+     * 单线程线程池
+     * 用于一直运行通知任务处理器
+     * @return 单线程线程池
+     */
     @Bean
-    public ThreadPoolExecutor singleThreadExecutor() {
-        // 为线程池起名
+    public ThreadPoolExecutor handlerExecutor() {
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNamePrefix("task-handler").build();
         // 单线程线程池
         return new ThreadPoolExecutor(1,
@@ -36,6 +40,27 @@ public class ThreadPoolConfig {
                 namedThreadFactory);
     }
 
+    /**
+     * 单线程线程池
+     * 用于恢复未完成通知的记录，完成恢复后关闭线程池
+     * @return 单线程线程池
+     */
+    @Bean
+    public ThreadPoolExecutor resumeExecutor() {
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNamePrefix("resume-task").build();
+        //
+        return new ThreadPoolExecutor(1,
+                1,
+                0,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<>(),
+                namedThreadFactory);
+    }
+
+    /**
+     * 多线程处理所有通知任务，线程数根据配置文件，可由业务量决定线程池大小
+     * @return 线程池
+     */
     @Bean
     public ThreadPoolExecutor taskExecutor() {
         // 为线程池起名
