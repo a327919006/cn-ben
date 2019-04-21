@@ -292,8 +292,8 @@
 
     <scm>
         <url>https://gitee.com/NuLiing/best-effort-notify</url>
-        <connection>https://gitee.com/NuLiing/best-effort-notify.git</connection>
-        <developerConnection>https://gitee.com/NuLiing/best-effort-notify</developerConnection>
+        <connection>https://gitee.com/NuLiing/cn-ben.git</connection>
+        <developerConnection>https://gitee.com/NuLiing/cn-ben</developerConnection>
     </scm>
 
     <developers>
