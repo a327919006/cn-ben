@@ -36,6 +36,9 @@ public class NotifyQueueCustomer {
         // 添加通知记录
         NotifyRecord notifyRecord = notifyRecordService.insertNotifyRecord(msg);
 
+        // TODO 判断剩余内存，过低时先不往内存中加，睡眠一段时间，再从数据库中加载
+        // TODO 开发通知记录管理后台
+
         // 通知加入延时任务队列
         NotifyTask notifyTask = BenUtils.coverToNotifyTask(notifyRecord, msg);
         taskHandler.addTask(notifyTask);
