@@ -21,6 +21,7 @@ public class ApplicationReadyListener implements ApplicationListener<Application
         ConfigurableApplicationContext applicationContext = event.getApplicationContext();
         NotifyTaskHandler notifyTaskHandler = applicationContext.getBean(NotifyTaskHandler.class);
         notifyTaskHandler.init();
+        // TODO 读取java -jar 的参数，决定是否需要恢复数据库中的数据，默认需要
         notifyTaskHandler.startResumeNotify();
     }
 }
