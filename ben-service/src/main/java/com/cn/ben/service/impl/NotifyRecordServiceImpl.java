@@ -51,7 +51,7 @@ public class NotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapper,
         notifyRecord.setId(notifyTask.getId());
         if (notifyFail) {
             notifyRecord.setNotifyStatus(NotifyStatusEnum.FAIL.getValue());
-            log.info("【NotifyTask】超过通知次数限制，标记为通知失败,id={}", notifyTask.getId());
+            log.info("【NotifyTask】标记为通知失败,id={}", notifyTask.getId());
         } else {
             notifyRecord.setNotifyStatus(notifyStatus.getValue());
         }
@@ -83,6 +83,9 @@ public class NotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapper,
         if (notifyStatus == NotifyStatusEnum.WAIT
                 || notifyStatus == NotifyStatusEnum.SUCCESS) {
             return false;
+        }
+        if (notifyStatus == NotifyStatusEnum.FAIL) {
+            return true;
         }
 
         return currNotifyTimes >= config.getInterval().size();
