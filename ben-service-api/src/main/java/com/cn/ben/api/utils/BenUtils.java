@@ -52,6 +52,7 @@ public class BenUtils {
         notifyTask.setNotifyHeader(msg.getNotifyHeader());
         notifyTask.setNotifyParam(msg.getNotifyParam());
         notifyTask.setNotifyParamType(msg.getNotifyParamType());
+        notifyTask.setBusinessFailContinue(msg.getBusinessFailContinue());
         notifyTask.setNotifyTimes((short) 0);
         return notifyTask;
     }

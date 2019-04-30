@@ -45,16 +45,23 @@ public class NotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapper,
 
     @Override
     public boolean updateNotifyStatus(NotifyTask notifyTask, NotifyStatusEnum notifyStatus) {
-        boolean notifyFail = judgeNotifyFail(notifyStatus, notifyTask.getNotifyTimes());
-
         NotifyRecord notifyRecord = new NotifyRecord();
         notifyRecord.setId(notifyTask.getId());
-        if (notifyFail) {
+
+        boolean notifyFail;
+        if (notifyStatus == NotifyStatusEnum.FAIL) {
+            notifyFail = true;
             notifyRecord.setNotifyStatus(NotifyStatusEnum.FAIL.getValue());
-            log.info("【NotifyTask】标记为通知失败,id={}", notifyTask.getId());
         } else {
-            notifyRecord.setNotifyStatus(notifyStatus.getValue());
+            notifyFail = judgeNotifyFail(notifyStatus, notifyTask.getNotifyTimes());
+            if (notifyFail) {
+                log.info("【NotifyTask】超过通知次数限制，标记为通知失败,id={}", notifyTask.getId());
+                notifyRecord.setNotifyStatus(NotifyStatusEnum.FAIL.getValue());
+            } else {
+                notifyRecord.setNotifyStatus(notifyStatus.getValue());
+            }
         }
+
         notifyRecord.setNotifyTimes(notifyTask.getNotifyTimes());
         notifyRecord.setUpdateTime(LocalDateTime.now());
         mapper.updateByPrimaryKeySelective(notifyRecord);

@@ -201,14 +201,14 @@ public class NotifyTaskHandler {
             notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
         } else {
             log.info("【NotifyTask】业务方处理失败,id={},result={}", notifyTask.getId(), result);
-            boolean notifyFail;
             if (notifyTask.getBusinessFailContinue()) {
-                notifyFail = notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
+                boolean notifyFail = notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
+                if (!notifyFail) {
+                    addTask(notifyTask);
+                }
             } else {
-                notifyFail = notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.FAIL);
-            }
-            if (!notifyFail) {
-                addTask(notifyTask);
+                log.info("【NotifyTask】无需继续通知，标记为通知失败,id={}", notifyTask.getId());
+                notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.FAIL);
             }
         }
 
