@@ -47,6 +47,10 @@ public class BenNotify {
      * 通知-成功响应标识（http请求响应包含此内容时即通知成功）（设为空或空字符串时，http响应码为2xx即通知成功）
      */
     private String successFlag;
+    /**
+     * 通知-Http请求成功，但业务方未返回成功响应标识时（即业务方处理失败），是否继续通知
+     */
+    private Boolean businessFailContinue = true;
 
     /**
      * 本次通知的业务名称

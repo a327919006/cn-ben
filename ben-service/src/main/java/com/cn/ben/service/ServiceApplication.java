@@ -20,7 +20,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class ServiceApplication {
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(ServiceApplication.class);
-        application.addListeners(new ApplicationReadyListener());
+        application.addListeners(new ApplicationReadyListener(args));
         application.run(args);
     }
 }

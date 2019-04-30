@@ -81,6 +81,13 @@
                     <mainClass>com.cn.ben.service.ServiceApplication</mainClass>
                     <outputDirectory>../target</outputDirectory>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
