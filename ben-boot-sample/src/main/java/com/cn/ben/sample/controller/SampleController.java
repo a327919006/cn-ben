@@ -84,7 +84,7 @@ public class SampleController {
         // 构造通知对象
         BenNotify notify = new BenNotify();
         // 通知-请求地址
-        notify.setNotifyUrl("http://3thpartyconsign-test.sto-express.cn:8111/stoPlatform/track/tmsTrace!getTraceNotify.action");
+        notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify/post/body");
         // 通知-请求方式
         notify.setNotifyMethod(MethodEnum.POST);
         // 通知-请求参数
@@ -99,8 +99,8 @@ public class SampleController {
         notify.setNotifyTimeout((short) 5000);
         // 通知-成功响应标识（http请求响应包含此内容时即通知成功）（设为空或空字符串时，http响应码为2xx即通知成功）
         notify.setSuccessFlag("SUCCESS");
-        // 通知-Http请求成功，但业务方未返回成功响应标识时（即业务方处理失败），是否继续通知
-        notify.setBusinessFailContinue(false);
+        // 通知-Http请求成功，但业务方未返回成功响应标识时（即业务方处理失败），是否继续通知，默认true
+        notify.setBusinessFailContinue(true);
 
         // 本次通知的业务名称，非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用
         notify.setBusinessName("test");

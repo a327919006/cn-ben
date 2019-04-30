@@ -48,7 +48,7 @@ public class BenNotify {
      */
     private String successFlag;
     /**
-     * 通知-Http请求成功，但业务方未返回成功响应标识时（即业务方处理失败），是否继续通知
+     * 通知-Http请求成功，但业务方未返回成功响应标识时（即业务方处理失败），是否继续通知，默认true
      */
     private Boolean businessFailContinue = true;
 
