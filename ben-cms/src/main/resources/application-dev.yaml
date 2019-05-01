@@ -1,0 +1,15 @@
+# rmq-cms运行端口和访问根路径，可根据自身情况配置
+server:
+  port: 10081
+  servlet:
+    context-path: /ben-cms
+
+# Dubbo配置
+dubbo:
+  application:
+    name: rmq-cms
+    logger: slf4j
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  consumer:
+    check: false
