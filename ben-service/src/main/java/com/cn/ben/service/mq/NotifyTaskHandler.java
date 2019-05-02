@@ -247,7 +247,7 @@ public class NotifyTaskHandler {
      * @param task 通知任务
      * @return 通知响应
      */
-    private HttpResponse sendNotify(NotifyTask task) {
+    public HttpResponse sendNotify(NotifyTask task) {
         HttpRequest request = httpRequest(task.getNotifyMethod(), task.getNotifyUrl());
         request = param(request, task.getNotifyParamType(), task.getNotifyParam());
         return request.addHeaders(task.getNotifyHeader())

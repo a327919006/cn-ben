@@ -1,10 +1,10 @@
 <script type="text/javascript">
     $(function () {//初始化
-        $('#message_datagrid').datagrid({
+        $('#notify_record_datagrid').datagrid({
             border: false,
             fit: true,
             striped: true,
-            url: 'message/page',
+            url: 'notify/record/page',
             method: 'get',
             pagination: true,//显示分页
             fitColumns: true,//自动计算列的宽度
@@ -15,7 +15,7 @@
             //selectOnCheck : false,
             singleSelect: true,
             onDblClickRow: function (rowIndex, rowData) {
-                message_showDetail(rowData);
+                notifyRecordShowDetail(rowData);
             },
             frozenColumns: [[ //冻结列
                 {
@@ -26,44 +26,39 @@
             columns: [[
                 {
                     field: 'id',
-                    title: '消息ID',
+                    title: '通知记录ID',
                     width: 50
                 },
                 {
-                    field: 'consumerQueue',
-                    title: '消费队列',
+                    field: 'businessName',
+                    title: '业务名称',
                     width: 30
                 },
                 {
-                    field: 'statusName',
-                    title: '消息状态',
+                    field: 'businessId',
+                    title: '业务ID',
                     width: 30
                 },
                 {
-                    field: 'resendTimes',
-                    title: '重发次数',
-                    width: 30
-                },
-                {
-                    field: 'alreadyDeadName',
-                    title: '是否死亡',
+                    field: 'notifyStatus',
+                    title: '通知状态',
                     width: 30,
                     formatter: function (value, row, index) {
-                        if (row.alreadyDead === 1) {
-                            return "<span style='color: red'>" + row.alreadyDeadName + "</span>";
+                        if (row.notifyStatus === 1) {
+                            return "<span style='color: red'>" + row.notifyStatusName + "</span>";
                         } else {
-                            return "<span style='color: dodgerblue'>" + row.alreadyDeadName + "</span>";
+                            return "<span style='color: dodgerblue'>" + row.notifyStatusName + "</span>";
                         }
                     }
                 },
                 {
-                    field: 'createTime',
-                    title: '创建时间',
+                    field: 'notifyTimes',
+                    title: '已通知次数',
                     width: 30
                 },
                 {
-                    field: 'confirmTime',
-                    title: '确认时间',
+                    field: 'createTime',
+                    title: '创建时间',
                     width: 30
                 },
                 {
@@ -77,11 +72,11 @@
                     width: 30,
                     formatter: function (value, row, index) {
                         var operators = "<span style='color: blue'>";
-                        operators += "<a href='javascript:void(0)' onclick=\"messageDelete(\'" + row.id + "\')\">删除</a>";
+                        operators += "<a href='javascript:void(0)' onclick=\"notifyRecordDelete(\'" + row.id + "\')\">删除</a>";
 
                         if (row.status === 1) {
                             operators += " | ";
-                            operators += "<a href='javascript:void(0)' onclick=\"messageResend(\'" + row.id + "\')\">重发</a>"
+                            operators += "<a href='javascript:void(0)' onclick=\"notifyAgain(\'" + row.id + "\')\">再次通知</a>"
                         }
                         operators += "</span>";
                         return operators;
@@ -92,11 +87,11 @@
                 {
                     text: '<span style="color: red"><strong>查看详情（双击）</strong></span>',
                     handler: function () {
-                        var checkedRows = $('#message_datagrid').datagrid('getChecked');
+                        var checkedRows = $('#notify_record_datagrid').datagrid('getChecked');
                         if (checkedRows.length <= 0) {
                             $.messager.alert('错误提示', '请选择要查看的记录', 'error');
                         } else {
-                            message_showDetail(checkedRows[0]);
+                            notifyRecordShowDetail(checkedRows[0]);
                         }
                     }
                 }, '-']
@@ -106,7 +101,7 @@
     /**
      * 删除消息
      */
-    function messageDelete(id) {
+    function notifyRecordDelete(id) {
         $.messager.confirm('确认', '您是否要删除当前的记录？', function (ret) {
             if (ret) {
                 parent.$.messager.progress({
@@ -114,7 +109,7 @@
                     interval: 100
                 });
                 $.ajax({
-                    url: 'message/' + id,
+                    url: 'notify/record/' + id,
                     data: {
                         _method: "DELETE"
                     },
@@ -122,7 +117,7 @@
                     dataType: 'json',
                     success: function (rsp) {
                         parent.$.messager.progress('close'); // 关闭进程对话框
-                        var dataGrid = $('#message_datagrid');
+                        var dataGrid = $('#notify_record_datagrid');
                         dataGrid.datagrid('load');
                         dataGrid.datagrid('unselectAll');//取消选中
                         if (rsp.code === 0) {
@@ -142,7 +137,7 @@
     /**
      * 重发消息
      */
-    function messageResend(id) {
+    function notifyAgain(id) {
         $.messager.confirm('确认', '您是否要重发当前消息？', function (ret) {
             if (ret) {
                 parent.$.messager.progress({
@@ -150,12 +145,12 @@
                     interval: 100
                 });
                 $.ajax({
-                    url: 'message/' + id + "/resend",
+                    url: 'notify/record/' + id + "/again",
                     type: "POST",//默认以get提交，使用get提交如果有中文后台会出现乱码
                     dataType: 'json',
                     success: function (rsp) {
                         parent.$.messager.progress('close'); // 关闭进程对话框
-                        var dataGrid = $('#message_datagrid');
+                        var dataGrid = $('#notify_record_datagrid');
                         dataGrid.datagrid('load');
                         dataGrid.datagrid('unselectAll');//取消选中
                         if (rsp.code === 0) {
@@ -175,9 +170,9 @@
     /**
      * 详情页
      */
-    function message_showDetail(rowData) {
+    function notifyRecordShowDetail(rowData) {
         var dig = $('<div  />').dialog({
-            href: 'page/message/detail',
+            href: 'page/notify/record/detail',
             width: 850,
             height: 500,
             modal: true,
@@ -204,16 +199,16 @@
     /**
      * 获取消息详情
      */
-    function getMessageDetail(messageId) {
+    function getMessageDetail(id) {
         $.ajax({
             type: "GET",
             cache: false,
             dataType: "json",
             timeout: 15000,
-            url: "message/" + messageId,
+            url: "notify/record/" + id,
             success: function (retObj, textStatus, XMLHttpRequest) {
                 if (0 === retObj.code) {
-                    $('#message_detail_form').form('load', retObj.data);
+                    $('#notify_record_detail_form').form('load', retObj.data);
                 } else {
                     $.messager.alert('错误提示', '加载数据异常', 'error');
                 }
@@ -230,6 +225,6 @@
          <#include "search.ftl"/>
     </div>
     <div data-options="region:'center',border:false">
-        <div id="message_datagrid"></div>
+        <div id="notify_record_datagrid"></div>
     </div>
 </div>
