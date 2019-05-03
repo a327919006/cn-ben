@@ -15,7 +15,7 @@
             //selectOnCheck : false,
             singleSelect: true,
             onDblClickRow: function (rowIndex, rowData) {
-                notifyRecordShowDetail(rowData);
+                showNotifyRecordDetail(rowData);
             },
             frozenColumns: [[ //冻结列
                 {
@@ -91,7 +91,7 @@
                         if (checkedRows.length <= 0) {
                             $.messager.alert('错误提示', '请选择要查看的记录', 'error');
                         } else {
-                            notifyRecordShowDetail(checkedRows[0]);
+                            showNotifyRecordDetail(checkedRows[0]);
                         }
                     }
                 }, '-']
@@ -99,7 +99,7 @@
     });
 
     /**
-     * 删除消息
+     * 删除
      */
     function notifyRecordDelete(id) {
         $.messager.confirm('确认', '您是否要删除当前的记录？', function (ret) {
@@ -135,10 +135,10 @@
     }
 
     /**
-     * 重发消息
+     * 再次通知
      */
     function notifyAgain(id) {
-        $.messager.confirm('确认', '您是否要重发当前消息？', function (ret) {
+        $.messager.confirm('确认', '您是否要再次通知该记录？', function (ret) {
             if (ret) {
                 parent.$.messager.progress({
                     text: '正在执行，请稍后....',
@@ -170,7 +170,7 @@
     /**
      * 详情页
      */
-    function notifyRecordShowDetail(rowData) {
+    function showNotifyRecordDetail(rowData) {
         var dig = $('<div  />').dialog({
             href: 'page/notify-record/detail',
             width: 850,
@@ -191,15 +191,15 @@
             },
             onLoad: function () {
                 //必须在窗体打开之前加载数据
-                getMessageDetail(rowData.id);
+                getNotifyRecordDetail(rowData.id);
             }
         });
     }
 
     /**
-     * 获取消息详情
+     * 获取详情
      */
-    function getMessageDetail(id) {
+    function getNotifyRecordDetail(id) {
         $.ajax({
             type: "GET",
             cache: false,

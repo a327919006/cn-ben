@@ -7,7 +7,7 @@ import com.cn.ben.api.model.po.NotifyRecord;
 import com.cn.ben.api.service.IBaseService;
 
 /**
- * 消息服务接口
+ * CMS通知记录服务接口
  *
  * @author Chen Nan
  */

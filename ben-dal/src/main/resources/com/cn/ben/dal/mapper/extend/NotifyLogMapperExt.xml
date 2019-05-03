@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.ben.dal.mapper.NotifyLogMapper">
+
+    <resultMap id="CmsNotifyLogVo" type="com.cn.ben.api.cms.model.vo.notify.CmsNotifyLogVo" extends="BaseResultMap">
+    </resultMap>
+
+    <select id="cmsListPage" parameterType="com.cn.ben.api.cms.model.dto.notify.CmsNotifyLogDto"
+            resultMap="CmsNotifyLogVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_notify_log
+        WHERE 1=1
+        <if test="id != null and id != ''">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="notifyId != null and notifyId != ''">
+            AND notify_id = #{notifyId,jdbcType=VARCHAR}
+        </if>
+        <if test="businessId != null and businessId != ''">
+            AND business_id = #{businessId,jdbcType=VARCHAR}
+        </if>
+        <if test="businessName != null and businessName != ''">
+            AND business_name = #{businessName,jdbcType=VARCHAR}
+        </if>
+        <if test="httpStatus != null">
+            AND http_status = #{httpStatus,jdbcType=INTEGER}
+        </if>
+        <choose>
+            <when test="createStartTime != null and createEndTime != null">
+                AND create_time >= #{createStartTime,jdbcType=VARCHAR}
+                AND create_time &lt;= #{createEndTime,jdbcType=VARCHAR}
+            </when>
+            <when test="createStartTime != null and createEndTime == null">
+                AND create_time >= #{createStartTime,jdbcType=VARCHAR}
+                AND create_time &lt;= NOW()
+            </when>
+            <when test="createStartTime == null and createEndTime != null">
+                AND create_time &lt;= #{createEndTime,jdbcType=VARCHAR}
+            </when>
+        </choose>
+        ORDER BY create_time DESC
+    </select>
+</mapper>

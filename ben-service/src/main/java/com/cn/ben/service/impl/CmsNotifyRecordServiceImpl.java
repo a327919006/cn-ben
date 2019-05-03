@@ -28,10 +28,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 消息服务实现
+ * CMS通知记录服务实现
  *
  * @author Chen Nan
- * @date 2019/3/11.
  */
 @Service
 @Slf4j

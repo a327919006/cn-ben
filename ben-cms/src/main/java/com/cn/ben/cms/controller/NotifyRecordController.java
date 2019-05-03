@@ -7,7 +7,6 @@ import com.cn.ben.api.cms.service.ICmsNotifyRecordService;
 import com.cn.ben.api.model.Constants;
 import com.cn.ben.api.model.dto.RspBase;
 import com.cn.ben.api.model.po.NotifyRecord;
-import com.cn.ben.api.service.INotifyRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.BeanUtils;
@@ -29,43 +28,43 @@ public class NotifyRecordController {
 
     @GetMapping("/page")
     public Object page(@ModelAttribute CmsNotifyRecordDto req) {
-        log.info("【message-page】start：" + req);
+        log.info("【NotifyRecord】page start：" + req);
         DataGrid rsp = cmsNotifyRecordService.listPage(req);
-        log.info("【message-page】success");
+        log.info("【NotifyRecord】page success");
         return rsp;
     }
 
     @GetMapping("/{id}")
     public Object get(@PathVariable("id") String id) {
-        log.info("【message-get】start：" + id);
+        log.info("【NotifyRecord】get start：" + id);
         NotifyRecord notifyRecord = cmsNotifyRecordService.selectByPrimaryKey(id);
         RspBase rspBase = new RspBase();
         if (notifyRecord != null) {
             CmsNotifyRecordVo notifyRecordVo = new CmsNotifyRecordVo();
             BeanUtils.copyProperties(notifyRecord, notifyRecordVo);
             rspBase.setData(notifyRecordVo);
-            log.info("【message-get】success：" + id);
+            log.info("【NotifyRecord】get success：" + id);
         } else {
-            log.info("【message-get】fail, not exist：" + id);
-            rspBase.code(Constants.CODE_FAILURE).msg("message not exist");
+            log.info("【NotifyRecord】get fail, not exist：" + id);
+            rspBase.code(Constants.CODE_FAILURE).msg("通知记录不存在");
         }
         return rspBase;
     }
 
     @DeleteMapping("/{id}")
     public Object delete(@PathVariable("id") String id) {
-        log.info("【message-delete】start：" + id);
+        log.info("【NotifyRecord】delete start：" + id);
         cmsNotifyRecordService.deleteByPrimaryKey(id);
         RspBase rspBase = new RspBase();
-        log.info("【message-delete】success：" + id);
+        log.info("【NotifyRecord】delete success：" + id);
         return rspBase;
     }
 
     @PostMapping("/{id}/again")
     public Object resend(@PathVariable("id") String id) {
-        log.info("【message-again】start：" + id);
+        log.info("【NotifyRecord】again start：" + id);
         RspBase rspBase = cmsNotifyRecordService.notifyAgain(id);
-        log.info("【message-again】success:" + id);
+        log.info("【NotifyRecord】again success:" + id);
         return rspBase;
     }
 }
