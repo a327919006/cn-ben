@@ -32,7 +32,7 @@
                 {
                     field: 'businessName',
                     title: '业务名称',
-                    width: 30
+                    width: 20
                 },
                 {
                     field: 'businessId',
@@ -42,19 +42,19 @@
                 {
                     field: 'notifyStatus',
                     title: '通知状态',
-                    width: 30,
+                    width: 20,
                     formatter: function (value, row, index) {
                         if (row.notifyStatus === 1) {
-                            return "<span style='color: red'>" + row.notifyStatusName + "</span>";
-                        } else {
                             return "<span style='color: dodgerblue'>" + row.notifyStatusName + "</span>";
+                        } else {
+                            return "<span style='color: red'>" + row.notifyStatusName + "</span>";
                         }
                     }
                 },
                 {
                     field: 'notifyTimes',
                     title: '已通知次数',
-                    width: 30
+                    width: 15
                 },
                 {
                     field: 'createTime',
@@ -74,7 +74,7 @@
                         var operators = "<span style='color: blue'>";
                         operators += "<a href='javascript:void(0)' onclick=\"notifyRecordDelete(\'" + row.id + "\')\">删除</a>";
 
-                        if (row.status === 1) {
+                        if (row.notifyStatus !== 1) {
                             operators += " | ";
                             operators += "<a href='javascript:void(0)' onclick=\"notifyAgain(\'" + row.id + "\')\">再次通知</a>"
                         }
@@ -172,7 +172,7 @@
      */
     function notifyRecordShowDetail(rowData) {
         var dig = $('<div  />').dialog({
-            href: 'page/notify/record/detail',
+            href: 'page/notify-record/detail',
             width: 850,
             height: 500,
             modal: true,

@@ -20,8 +20,11 @@
     <select id="cmsListPage" parameterType="com.cn.ben.api.cms.model.dto.notify.CmsNotifyRecordDto"
             resultMap="CmsNotifyRecordVo">
         SELECT <include refid="Base_Column_List" />
-        FROM t_message
+        FROM t_notify_record
         WHERE 1=1
+        <if test="id != null and id != ''">
+            AND id = #{id,jdbcType=VARCHAR}
+        </if>
         <if test="businessId != null and businessId != ''">
             AND business_id = #{businessId,jdbcType=VARCHAR}
         </if>

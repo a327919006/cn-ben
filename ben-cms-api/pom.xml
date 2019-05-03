@@ -18,6 +18,11 @@
             <artifactId>ben-service-api</artifactId>
             <version>${ben-service-api.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.gitee.nuliing</groupId>
+            <artifactId>ben-api</artifactId>
+            <version>${ben-api.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

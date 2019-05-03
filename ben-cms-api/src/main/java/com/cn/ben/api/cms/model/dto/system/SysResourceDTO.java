@@ -1,7 +1,7 @@
 package com.cn.ben.api.cms.model.dto.system;
 
-import com.cn.rmq.api.utils.json.deserializer.DateTimeDeserializer;
-import com.cn.rmq.api.utils.json.serializer.DateTimeSerializer;
+import com.cn.ben.api.utils.json.deserializer.DateTimeDeserializer;
+import com.cn.ben.api.utils.json.serializer.DateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 

@@ -64,8 +64,7 @@ public class NotifyRecordController {
     @PostMapping("/{id}/again")
     public Object resend(@PathVariable("id") String id) {
         log.info("【message-again】start：" + id);
-        cmsNotifyRecordService.notifyAgain(id);
-        RspBase rspBase = new RspBase();
+        RspBase rspBase = cmsNotifyRecordService.notifyAgain(id);
         log.info("【message-again】success:" + id);
         return rspBase;
     }

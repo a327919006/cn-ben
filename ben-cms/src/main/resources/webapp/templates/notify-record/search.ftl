@@ -19,10 +19,14 @@
 <form id="notify_record_searchform" class="field-form" style="margin-top:5px;margin-bottom: 0px;">
     <table>
         <tr>
+            <td>通知记录ID</td>
+            <td><input name="id" class="easyui-validatebox" style="width: 255px;"/></td>
             <td>业务ID</td>
             <td><input name="businessId" class="easyui-validatebox"/></td>
             <td>业务名称</td>
-            <td><input name="consumerQueue" class="easyui-validatebox"/></td>
+            <td><input name="businessName" class="easyui-validatebox"/></td>
+        </tr>
+        <tr>
             <td>消息状态</td>
             <td>
                 <select name="notifyStatus" class="easyui-combobox" style="width: 165px;"
@@ -35,10 +39,8 @@
                     <option value="4">通知失败</option>
                 </select>
             </td>
-        </tr>
-        <tr>
             <td>创建时间</td>
-            <td colspan="3">
+            <td colspan="2">
                 <input name="createStartTime" class="easyui-datetimebox"/>
                 至
                 <input name="createEndTime" class="easyui-datetimebox"/>
@@ -48,7 +50,7 @@
             <td style="text-align:right" colspan="3">
                 <a onclick="searchNotifyRecord()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
             </td>
-            <td style="text-align:left" colspan="3">
+            <td style="text-align:left" colspan="4">
                 <a onclick="clearSearchNotifyRecordForm()" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">重置</a>
             </td>
         </tr>

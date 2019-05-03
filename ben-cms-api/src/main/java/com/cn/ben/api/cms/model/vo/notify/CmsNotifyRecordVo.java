@@ -1,5 +1,8 @@
 package com.cn.ben.api.cms.model.vo.notify;
 
+import com.cn.ben.api.enums.MethodEnum;
+import com.cn.ben.api.enums.NotifyStatusEnum;
+import com.cn.ben.api.enums.ParamTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,4 +49,16 @@ public class CmsNotifyRecordVo implements Serializable {
     private LocalDateTime updateTime;
 
     private String notifyParam;
+
+    public String getNotifyMethodName() {
+        return MethodEnum.format(notifyMethod);
+    }
+
+    public String getNotifyParamTypeName() {
+        return ParamTypeEnum.format(notifyParamType);
+    }
+
+    public String getNotifyStatusName() {
+        return NotifyStatusEnum.format(notifyStatus);
+    }
 }

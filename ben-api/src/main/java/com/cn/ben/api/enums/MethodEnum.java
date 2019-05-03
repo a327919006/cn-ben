@@ -28,6 +28,29 @@ public enum MethodEnum {
         return value;
     }
 
+    public static String format(Byte value) {
+        switch (value) {
+            case 0:
+                return "GET";
+            case 1:
+                return "POST";
+            case 2:
+                return "HEAD";
+            case 3:
+                return "OPTIONS";
+            case 4:
+                return "PUT";
+            case 5:
+                return "DELETE";
+            case 6:
+                return "TRACE";
+            case 7:
+                return "PATCH";
+            default:
+                return "";
+        }
+    }
+
     public static MethodEnum parse(byte value){
         switch (value) {
             case 0:

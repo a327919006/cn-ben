@@ -24,6 +24,7 @@ import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -64,7 +65,12 @@ public class CmsNotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapp
 
         NotifyTask notifyTask = BenUtils.coverToNotifyTask(notifyRecord);
         try {
+            log.info("【NotifyTask】开始通知,id={},times={}", notifyTask.getId(), notifyTask.getNotifyTimes());
             HttpResponse response = notifyTaskHandler.sendNotify(notifyTask);
+
+            // 修改任务的通知次数与最近通知时间
+            notifyTask.setNotifyTimes((short) (notifyTask.getNotifyTimes() + 1));
+            notifyTask.setUpdateTime(LocalDateTime.now());
 
             // 判断Http请求状态码
             if (response.isOk()) {
@@ -90,13 +96,15 @@ public class CmsNotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapp
         if (successFlag) {
             log.info("【NotifyTask】通知成功,id={},result={}", notifyTask.getId(), result);
             notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.SUCCESS);
+
             notifyLogService.insertNotifyLog(notifyTask, response.getStatus(), result);
             return new RspBase().msg("通知成功");
         } else {
             log.info("【NotifyTask】业务方处理失败,id={},result={}", notifyTask.getId(), result);
             notifyRecordService.updateNotifyStatus(notifyTask, NotifyStatusEnum.BUSINESS_FAIL);
+
             notifyLogService.insertNotifyLog(notifyTask, response.getStatus(), result);
-            return new RspBase().code(Constants.CODE_FAILURE).msg("业务方处理失败, result=" + result);
+            return new RspBase().code(Constants.CODE_FAILURE).msg("业务方处理失败：" + result);
         }
     }
 

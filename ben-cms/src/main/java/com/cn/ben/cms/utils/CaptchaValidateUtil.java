@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 /**
  * <p>图形验证码工具类</p>
  *
+ * @author Chen Nan
  */
 public final class CaptchaValidateUtil {
 
