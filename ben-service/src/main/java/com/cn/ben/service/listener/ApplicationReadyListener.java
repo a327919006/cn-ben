@@ -26,6 +26,8 @@ public class ApplicationReadyListener implements ApplicationListener<Application
     @SuppressWarnings("NullableProblems")
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+        printMemory();
+
         ConfigurableApplicationContext applicationContext = event.getApplicationContext();
         NotifyTaskHandler notifyTaskHandler = applicationContext.getBean(NotifyTaskHandler.class);
         notifyTaskHandler.init();
@@ -37,5 +39,21 @@ public class ApplicationReadyListener implements ApplicationListener<Application
             ThreadPoolExecutor resumeExecutor = applicationContext.getBean("resumeExecutor", ThreadPoolExecutor.class);
             resumeExecutor.shutdown();
         }
+    }
+
+    /**
+     * 输出JVM内存情况
+     */
+    private void printMemory(){
+        int byteToMb = 1024 * 1024;
+        Runtime rt = Runtime.getRuntime();
+        long vmTotal = rt.totalMemory() / byteToMb;
+        long vmFree = rt.freeMemory() / byteToMb;
+        long vmMax = rt.maxMemory() / byteToMb;
+        long vmUse = vmTotal - vmFree;
+        log.info("【BenService】JVM内存已用的空间为：" + vmUse + " MB");
+        log.info("【BenService】JVM内存的空闲空间为：" + vmFree + " MB");
+        log.info("【BenService】JVM总内存空间为：" + vmTotal + " MB");
+        log.info("【BenService】JVM最大内存空间为：" + vmMax + " MB");
     }
 }

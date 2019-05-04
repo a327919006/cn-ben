@@ -14,6 +14,20 @@ spring:
     broker-url: tcp://127.0.0.1:61616
     user: admin
     password: admin
+  # 邮箱配置
+  mail:
+    host: smtp.163.com
+    username: xxxx@163.com
+    password: xxxx
+    # 收件人
+    receiver: xxxx@qq.com
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 # Dubbo配置
 dubbo:
@@ -29,8 +43,14 @@ dubbo:
     base-packages: com.cn.ben.service.impl
 
 # 延时队列配置
-delay:
-  queue:
+task:
+  handler:
+    core-pool-size: 10
+    max-pool-size: 100
+    keep-alive-time: 60000
+    queue-capacity: 10
+    handler-sleep: 5000
+    memory-less-percent: 20
     interval:
     - 0
     - 1

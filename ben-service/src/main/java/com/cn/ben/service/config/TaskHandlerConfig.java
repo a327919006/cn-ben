@@ -43,6 +43,13 @@ public class TaskHandlerConfig {
     private Integer handlerSleep = 1000;
 
     /**
+     * 内存不足百分比
+     * 计算公式：(maxMemory-totalMemory) < (vmMax / memoryLssPercent)
+     * 即剩余内存小于最大内存的20%时，发送告警邮件
+     */
+    private Integer memoryLssPercent = 20;
+
+    /**
      * 重复通知时间间隔（单位：分钟）
      * 举例： [0, 1, 4, 10, 30, 60, 120, 360]
      * 第一次立即通知，如果业务方没有返回成功，则1分钟后再次通知。

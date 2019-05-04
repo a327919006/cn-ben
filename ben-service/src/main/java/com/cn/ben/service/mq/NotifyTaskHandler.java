@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.system.HostInfo;
 import com.cn.ben.api.enums.MethodEnum;
 import com.cn.ben.api.enums.NotifyStatusEnum;
 import com.cn.ben.api.enums.ParamTypeEnum;
@@ -18,8 +19,13 @@ import com.cn.ben.service.config.TaskHandlerConfig;
 import com.github.pagehelper.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -43,11 +49,17 @@ public class NotifyTaskHandler {
     private INotifyRecordService notifyRecordService;
     @Reference
     private INotifyLogService notifyLogService;
+    @Resource
+    private JavaMailSender mailSender;
+    @Value("${spring.mail.username}")
+    private String mailFrom;
+    @Value("${spring.mail.receiver}")
+    private String mailTo;
 
     /**
      * 延时任务队列
      */
-    private static DelayQueue<NotifyTask> delayQueue = new DelayQueue<>();
+    public static DelayQueue<NotifyTask> delayQueue = new DelayQueue<>();
     /**
      * 监听通知任务队列-单线程线程池
      */
@@ -68,6 +80,11 @@ public class NotifyTaskHandler {
      * 最大通知次数
      */
     private int maxNotifyTimes;
+    /**
+     * 最近一次内存告警邮件发送日期
+     */
+    private static LocalDate lastSendWarnMailDate;
+
 
     public NotifyTaskHandler(ThreadPoolExecutor handlerExecutor,
                              ThreadPoolExecutor resumeExecutor,
@@ -87,16 +104,21 @@ public class NotifyTaskHandler {
         log.info("【NotifyTaskHandler】开始初始化");
         handlerExecutor.execute(() -> {
             while (true) {
+                NotifyTask notifyTask = null;
                 try {
                     log.debug("【NotifyTaskHandler】ActiveCount={}", taskExecutor.getActiveCount());
                     if (taskExecutor.getActiveCount() < taskExecutor.getMaximumPoolSize()) {
-                        NotifyTask notifyTask = delayQueue.take();
-                        taskExecutor.execute(() -> handleTask(notifyTask));
+                        notifyTask = delayQueue.take();
+                        NotifyTask finalNotifyTask = notifyTask;
+                        taskExecutor.execute(() -> handleTask(finalNotifyTask));
                     } else {
                         handlerSleep();
                     }
                 } catch (RejectedExecutionException e) {
                     handlerSleep();
+                    if (notifyTask != null) {
+                        addTask(notifyTask);
+                    }
                 } catch (Exception e) {
                     log.error("【NotifyTaskHandler】Exception：", e);
                 }
@@ -125,16 +147,16 @@ public class NotifyTaskHandler {
                     // 分页查询通知记录
                     Page<NotifyRecord> page = getPage(condition, pageNum, pageSize, countFlag);
                     List<NotifyRecord> list = page.getResult();
-                    log.info("【ResumeNotify】共需恢复{}个任务", page.getTotal());
+                    if (countFlag) {
+                        log.info("【ResumeNotify】共需恢复{}个任务", page.getTotal());
+                        countFlag = false;
+                        totalPage = page.getPages();
+                    }
 
                     for (NotifyRecord notifyRecord : list) {
                         resumeNotify(notifyRecord);
                     }
 
-                    if (countFlag) {
-                        countFlag = false;
-                        totalPage = page.getPages();
-                    }
                     if (pageNum >= totalPage) {
                         break;
                     }
@@ -363,4 +385,61 @@ public class NotifyTaskHandler {
         condition.setCount(countFlag);
         return notifyRecordService.listPage(condition);
     }
+
+    /**
+     * 判断JVM内存是否不足
+     */
+    public boolean judgeMemoryLess() {
+        int byteToMb = 1024 * 1024;
+        Runtime rt = Runtime.getRuntime();
+        long vmTotal = rt.totalMemory() / byteToMb;
+        long vmFree = rt.freeMemory() / byteToMb;
+        long vmMax = rt.maxMemory() / byteToMb;
+        long vmUse = vmTotal - vmFree;
+        if (vmMax - vmTotal < (vmMax / 20)) {
+            sendWarnMail(vmTotal, vmFree, vmMax, vmUse);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 发送内存告警邮件
+     */
+    private void sendWarnMail(long vmTotal, long vmFree, long vmMax, long vmUse) {
+        boolean needSendMailFlag = lastSendWarnMailDate == null || LocalDate.now().compareTo(lastSendWarnMailDate) > 0;
+        if (needSendMailFlag) {
+            int size = NotifyTaskHandler.delayQueue.size();
+            log.info("【BenService】内存不足，积压消息数：" + size);
+            log.info("【BenService】JVM内存已用的空间为：" + vmUse + " MB");
+            log.info("【BenService】JVM内存的空闲空间为：" + vmFree + " MB");
+            log.info("【BenService】JVM总内存空间为：" + vmTotal + " MB");
+            log.info("【BenService】JVM最大内存空间为：" + vmMax + " MB");
+            lastSendWarnMailDate = LocalDate.now();
+
+            try {
+                HostInfo hostInfo = new HostInfo();
+                String title = "【BenService】内存不足";
+                String content = "";
+                content += "主机IP：" + hostInfo.getAddress() + "\n";
+                content += "主机名：" + hostInfo.getName() + "\n";
+                content += "积压消息数：" + size + "\n";
+                content += "JVM内存已用的空间为：" + vmUse + " MB\n";
+                content += "JVM内存的空闲空间为：" + vmFree + " MB\n";
+                content += "JVM总内存空间为：" + vmTotal + " MB\n";
+                content += "JVM最大内存空间为：" + vmMax + " MB\n";
+
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom(mailFrom);
+                message.setTo(mailTo);
+                message.setSubject(title);
+                message.setText(content);
+                mailSender.send(message);
+            } catch (Exception e) {
+                log.error("【BenService】发送告警邮件异常:", e);
+            }
+        }
+    }
+
 }
