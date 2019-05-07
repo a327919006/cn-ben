@@ -73,8 +73,8 @@ public class MemoryListener {
         if (needSendMailFlag) {
             int size = NotifyTaskHandler.delayQueue.size();
             log.info("【MemoryListener】内存不足，积压消息数：" + size);
-            log.info("【MemoryListener】JVM内存已用的空间为：" + vmUse + " MB");
-            log.info("【MemoryListener】JVM内存的空闲空间为：" + vmFree + " MB");
+            log.info("【MemoryListener】JVM已用内存空间为：" + vmUse + " MB");
+            log.info("【MemoryListener】JVM空闲内存空间为：" + vmFree + " MB");
             log.info("【MemoryListener】JVM总内存空间为：" + vmTotal + " MB");
             log.info("【MemoryListener】JVM最大内存空间为：" + vmMax + " MB");
             log.info("【MemoryListener】JVM内存阈值：" + threshold + " MB");
@@ -89,8 +89,8 @@ public class MemoryListener {
                 content += "主机IP：" + hostInfo.getAddress() + "\n";
                 content += "主机名：" + hostInfo.getName() + "\n";
                 content += "积压消息数：" + size + "\n";
-                content += "JVM内存已用的空间为：" + vmUse + " MB\n";
-                content += "JVM内存的空闲空间为：" + vmFree + " MB\n";
+                content += "JVM已用内存空间为：" + vmUse + " MB\n";
+                content += "JVM空闲内存空间为：" + vmFree + " MB\n";
                 content += "JVM总内存空间为：" + vmTotal + " MB\n";
                 content += "JVM最大内存空间为：" + vmMax + " MB\n";
                 content += "JVM内存阈值为：" + threshold + " MB\n";

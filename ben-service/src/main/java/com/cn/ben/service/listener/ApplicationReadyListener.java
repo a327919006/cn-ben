@@ -51,8 +51,8 @@ public class ApplicationReadyListener implements ApplicationListener<Application
         long vmFree = rt.freeMemory() / byteToMb;
         long vmMax = rt.maxMemory() / byteToMb;
         long vmUse = vmTotal - vmFree;
-        log.info("【BenService】JVM内存已用的空间为：" + vmUse + " MB");
-        log.info("【BenService】JVM内存的空闲空间为：" + vmFree + " MB");
+        log.info("【BenService】JVM已用内存空间为：" + vmUse + " MB");
+        log.info("【BenService】JVM空闲内存空间为：" + vmFree + " MB");
         log.info("【BenService】JVM总内存空间为：" + vmTotal + " MB");
         log.info("【BenService】JVM最大内存空间为：" + vmMax + " MB");
     }
