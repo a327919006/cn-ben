@@ -47,7 +47,7 @@ public class TaskHandlerConfig {
      * 计算公式：(maxMemory-totalMemory) < (vmMax / memoryLssPercent)
      * 即剩余内存小于最大内存的20%时，发送告警邮件
      */
-    private Integer memoryLssPercent = 20;
+    private Integer memoryLessPercent = 20;
 
     /**
      * 重复通知时间间隔（单位：分钟）

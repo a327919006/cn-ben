@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 服务层启动类
@@ -12,10 +13,12 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Chen Nan
  */
 @SpringBootApplication
+@EnableScheduling
 @MapperScan("com.cn.ben.dal.mapper")
 @ComponentScan(basePackages = {
         "com.cn.ben.dal.mapper",
         "com.cn.ben.service.config",
+        "com.cn.ben.service.listener",
         "com.cn.ben.service.mq"})
 public class ServiceApplication {
     public static void main(String[] args) {

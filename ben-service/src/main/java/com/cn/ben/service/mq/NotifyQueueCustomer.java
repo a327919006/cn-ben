@@ -13,10 +13,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 /**
- * <p>Title:</p>
- * <p>Description:
  * 通知队列消息监听器
- * </p>
  *
  * @author Chen Nan
  */
@@ -36,12 +33,11 @@ public class NotifyQueueCustomer {
         // 添加通知记录
         NotifyRecord notifyRecord = notifyRecordService.insertNotifyRecord(msg);
 
-        if (!taskHandler.judgeMemoryLess()) {
-            // 通知加入延时任务队列
-            NotifyTask notifyTask = BenUtils.coverToNotifyTask(notifyRecord, msg);
-            taskHandler.addTask(notifyTask);
+        // 通知加入延时任务队列
+        NotifyTask notifyTask = BenUtils.coverToNotifyTask(notifyRecord, msg);
+        taskHandler.addTask(notifyTask);
 
-            log.info("【NotifyQueue】处理消息成功,id=" + notifyRecord.getId());
-        }
+        log.info("【NotifyQueue】处理消息成功,id=" + notifyRecord.getId());
+
     }
 }
