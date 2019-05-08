@@ -329,8 +329,8 @@ public class NotifyTaskHandler {
      */
     private void handlerSleep() {
         // 线程池耗尽，延时任务将产生堆积（1、调整服务器资源，考虑增加线程数。2、调整通知超时时间。）
-        log.warn("【NotifyTaskHandler】注意：线程池耗尽，任务处理器将休眠{}毫秒", config.getHandlerSleep());
-        ThreadUtil.sleep(config.getHandlerSleep());
+        log.warn("【NotifyTaskHandler】注意：线程池耗尽，任务处理器将休眠{}毫秒", config.getHandlerExecutorSleep());
+        ThreadUtil.sleep(config.getHandlerExecutorSleep());
     }
 
     /**

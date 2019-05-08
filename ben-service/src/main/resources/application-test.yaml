@@ -49,7 +49,7 @@ task:
     max-pool-size: 100
     keep-alive-time: 60000
     queue-capacity: 10
-    handler-sleep: 5000
+    handler-executor-sleep: 5000
     memory-less-percent: 20
     interval:
     - 0

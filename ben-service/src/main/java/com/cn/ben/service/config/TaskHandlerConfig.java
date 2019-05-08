@@ -40,7 +40,7 @@ public class TaskHandlerConfig {
      * 处理器睡眠时间
      * 当处理通知任务的线程池耗尽时，通知任务处理器将睡眠一段时间
      */
-    private Integer handlerSleep = 1000;
+    private Integer handlerExecutorSleep = 5000;
 
     /**
      * 内存不足百分比
