@@ -9,7 +9,7 @@ import com.cn.ben.api.cms.service.ICmsNotifyRecordService;
 import com.cn.ben.api.enums.NotifyStatusEnum;
 import com.cn.ben.api.exceptions.CheckException;
 import com.cn.ben.api.model.Constants;
-import com.cn.ben.api.model.dto.NotifyTask;
+import com.cn.ben.api.model.dto.notify.NotifyTask;
 import com.cn.ben.api.model.dto.RspBase;
 import com.cn.ben.api.model.po.NotifyRecord;
 import com.cn.ben.api.service.INotifyLogService;

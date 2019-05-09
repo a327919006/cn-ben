@@ -1,4 +1,4 @@
-package com.cn.ben.api.model.dto;
+package com.cn.ben.api.model.dto.notify;
 
 import com.cn.ben.api.enums.MethodEnum;
 import com.cn.ben.api.enums.ParamTypeEnum;

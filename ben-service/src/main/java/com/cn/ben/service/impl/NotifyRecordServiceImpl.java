@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.cn.ben.api.enums.NotifyStatusEnum;
 import com.cn.ben.api.model.BenNotify;
-import com.cn.ben.api.model.dto.NotifyTask;
+import com.cn.ben.api.model.dto.notify.NotifyTask;
 import com.cn.ben.api.model.po.NotifyRecord;
 import com.cn.ben.api.service.INotifyRecordService;
 import com.cn.ben.dal.mapper.NotifyRecordMapper;

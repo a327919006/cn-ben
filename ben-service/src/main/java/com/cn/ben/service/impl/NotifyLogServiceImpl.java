@@ -1,6 +1,6 @@
 package com.cn.ben.service.impl;
 
-import com.cn.ben.api.model.dto.NotifyTask;
+import com.cn.ben.api.model.dto.notify.NotifyTask;
 import com.cn.ben.api.model.po.NotifyLog;
 import com.cn.ben.api.service.INotifyLogService;
 import com.cn.ben.dal.mapper.NotifyLogMapper;

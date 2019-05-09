@@ -1,5 +1,7 @@
 package com.cn.ben.service.listener;
 
+import com.cn.ben.api.model.dto.memory.BenMemory;
+import com.cn.ben.api.utils.BenUtils;
 import com.cn.ben.service.mq.NotifyTaskHandler;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -44,16 +46,8 @@ public class ApplicationReadyListener implements ApplicationListener<Application
     /**
      * 输出JVM内存情况
      */
-    private void printMemory(){
-        int byteToMb = 1024 * 1024;
-        Runtime rt = Runtime.getRuntime();
-        long vmTotal = rt.totalMemory() / byteToMb;
-        long vmFree = rt.freeMemory() / byteToMb;
-        long vmMax = rt.maxMemory() / byteToMb;
-        long vmUse = vmTotal - vmFree;
-        log.info("【BenService】JVM已用内存空间为：" + vmUse + " MB");
-        log.info("【BenService】JVM空闲内存空间为：" + vmFree + " MB");
-        log.info("【BenService】JVM总内存空间为：" + vmTotal + " MB");
-        log.info("【BenService】JVM最大内存空间为：" + vmMax + " MB");
+    private void printMemory() {
+        BenMemory memory = BenUtils.getMemoryInfo();
+        log.info("【BenService】" + memory);
     }
 }

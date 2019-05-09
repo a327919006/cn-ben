@@ -7,13 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * <p>Title:</p>
- * <p>Description:
- * 消息确认定时任务配置
- * </p>
+ * 通知任务处理器配置
  *
  * @author Chen Nan
- * @date 2019/3/18.
  */
 @Component
 @ConfigurationProperties(prefix = "task.handler")
@@ -28,7 +24,7 @@ public class TaskHandlerConfig {
      */
     private Integer maxPoolSize = 100;
     /**
-     * 线程运行的空闲时间
+     * 线程运行的空闲时间（单位：毫秒）
      */
     private Integer keepAliveTime = 60000;
     /**
@@ -37,17 +33,10 @@ public class TaskHandlerConfig {
     private Integer queueCapacity = 10;
 
     /**
-     * 处理器睡眠时间
+     * 处理器线程池睡眠时间（单位：毫秒）
      * 当处理通知任务的线程池耗尽时，通知任务处理器将睡眠一段时间
      */
     private Integer handlerExecutorSleep = 5000;
-
-    /**
-     * 内存不足百分比
-     * 计算公式：(maxMemory-totalMemory) < (vmMax / memoryLssPercent)
-     * 即剩余内存小于最大内存的20%时，发送告警邮件
-     */
-    private Integer memoryLessPercent = 20;
 
     /**
      * 重复通知时间间隔（单位：分钟）

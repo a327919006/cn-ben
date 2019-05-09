@@ -2,7 +2,7 @@ package com.cn.ben.service.mq;
 
 import com.cn.ben.api.model.BenNotify;
 import com.cn.ben.api.model.Constants;
-import com.cn.ben.api.model.dto.NotifyTask;
+import com.cn.ben.api.model.dto.notify.NotifyTask;
 import com.cn.ben.api.model.po.NotifyRecord;
 import com.cn.ben.api.service.INotifyRecordService;
 import com.cn.ben.api.utils.BenUtils;

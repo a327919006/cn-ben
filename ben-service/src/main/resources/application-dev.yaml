@@ -42,7 +42,7 @@ dubbo:
   scan:
     base-packages: com.cn.ben.service.impl
 
-# 延时队列配置
+# 通知任务处理器配置
 task:
   handler:
     core-pool-size: 10
@@ -50,7 +50,6 @@ task:
     keep-alive-time: 60000
     queue-capacity: 10
     handler-executor-sleep: 5000
-    memory-less-percent: 20
     interval:
     - 0
     - 1
@@ -61,3 +60,10 @@ task:
     - 120
     - 360
     - 900
+
+# 系统监控配置
+monitor:
+  # 内存监控
+  memory:
+    less-percent: 15
+    sleep-time: 120000

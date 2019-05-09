@@ -2,7 +2,7 @@ package com.cn.ben.api.service;
 
 import com.cn.ben.api.enums.NotifyStatusEnum;
 import com.cn.ben.api.model.BenNotify;
-import com.cn.ben.api.model.dto.NotifyTask;
+import com.cn.ben.api.model.dto.notify.NotifyTask;
 import com.cn.ben.api.model.po.NotifyRecord;
 
 /**

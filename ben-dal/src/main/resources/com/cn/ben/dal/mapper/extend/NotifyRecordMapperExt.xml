@@ -15,6 +15,15 @@
         <if test="notifying != null">
             AND notify_status IN (0, 2, 3)
         </if>
+        <if test="notifyingExceptWait != null">
+            AND notify_status IN (2, 3)
+        </if>
+        <if test="createStartTime != null">
+            AND create_time >= #{createStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createEndTime != null">
+            AND create_time &lt;= #{createEndTime,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="cmsListPage" parameterType="com.cn.ben.api.cms.model.dto.notify.CmsNotifyRecordDto"

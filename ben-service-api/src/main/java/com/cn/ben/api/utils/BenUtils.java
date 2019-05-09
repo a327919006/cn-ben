@@ -4,7 +4,8 @@ import cn.hutool.json.JSONUtil;
 import com.cn.ben.api.enums.MethodEnum;
 import com.cn.ben.api.enums.ParamTypeEnum;
 import com.cn.ben.api.model.BenNotify;
-import com.cn.ben.api.model.dto.NotifyTask;
+import com.cn.ben.api.model.dto.memory.BenMemory;
+import com.cn.ben.api.model.dto.notify.NotifyTask;
 import com.cn.ben.api.model.po.NotifyRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +21,8 @@ import java.util.Map;
  */
 @Slf4j
 public class BenUtils {
+    private static final int BYTE_TO_MB = 1024 * 1024;
+    private static final BenMemory MEMORY = new BenMemory();
 
     /**
      * NotifyRecord转成NotifyTask
@@ -55,5 +58,24 @@ public class BenUtils {
         notifyTask.setBusinessFailContinue(msg.getBusinessFailContinue());
         notifyTask.setNotifyTimes((short) 0);
         return notifyTask;
+    }
+
+    /**
+     * 获取内存信息
+     *
+     * @return 内存信息
+     */
+    public static BenMemory getMemoryInfo() {
+        Runtime rt = Runtime.getRuntime();
+        long vmTotal = rt.totalMemory() / BYTE_TO_MB;
+        long vmFree = rt.freeMemory() / BYTE_TO_MB;
+        long vmMax = rt.maxMemory() / BYTE_TO_MB;
+        long vmUse = vmTotal - vmFree;
+
+        MEMORY.setFree(vmFree);
+        MEMORY.setUse(vmUse);
+        MEMORY.setTotal(vmTotal);
+        MEMORY.setMax(vmMax);
+        return MEMORY;
     }
 }

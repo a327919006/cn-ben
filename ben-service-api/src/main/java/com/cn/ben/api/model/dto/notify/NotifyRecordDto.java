@@ -1,4 +1,4 @@
-package com.cn.ben.api.model.dto;
+package com.cn.ben.api.model.dto.notify;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,10 +17,24 @@ import java.io.Serializable;
 @ToString
 public class NotifyRecordDto implements Serializable {
     /**
-     * 获取状态为 0待通知 2已通知(业务方处理失败) 3Http请求异常
-     * 通知记录，继续通知，即通知成功与通知失败的不再通知
+     * 获取状态为【0待通知 2已通知(业务方处理失败) 3Http请求异常】的通知记录
      */
     private Integer notifying;
+
+    /**
+     * 获取状态为【2已通知(业务方处理失败) 3Http请求异常】的通知记录
+     */
+    private Integer notifyingExceptWait;
+
+    /**
+     * 创建时间起
+     */
+    private String createStartTime;
+
+    /**
+     * 创建时间止
+     */
+    private String createEndTime;
 
     /**
      * 分页页码
