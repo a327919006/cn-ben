@@ -47,7 +47,7 @@ public class NotifyTask implements Delayed {
     /**
      * 通知-请求参数
      */
-    private Map<String, Object> notifyParam;
+    private String notifyParam;
     /**
      * 通知-请求参数类型 0:FORM 1:BODY
      */

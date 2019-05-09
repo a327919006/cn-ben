@@ -12,10 +12,23 @@
     <artifactId>ben-api</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <lombok.versioin>1.18.6</lombok.versioin>
+        <hutool.version>4.5.3</hutool.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.versioin}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

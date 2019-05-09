@@ -1,5 +1,6 @@
 package com.cn.ben.api.model;
 
+import cn.hutool.json.JSONUtil;
 import com.cn.ben.api.enums.MethodEnum;
 import com.cn.ben.api.enums.ParamTypeEnum;
 import lombok.Getter;
@@ -9,16 +10,19 @@ import lombok.ToString;
 import java.util.Map;
 
 /**
- * <p>Title:</p>
- * <p>Description:</p>
+ * Ben通知对象参数封装
  *
  * @author Chen Nan
- * @date 2019/4/11.
  */
 @Getter
 @Setter
 @ToString
 public class BenNotify {
+    /**
+     * Queue
+     */
+    public static final String QUEUE = "notify.queue";
+
     /**
      * 通知-请求地址
      */
@@ -34,7 +38,7 @@ public class BenNotify {
     /**
      * 通知-请求参数
      */
-    private Map<String, Object> notifyParam;
+    private String notifyParam = "";
     /**
      * 通知-请求参数类型 0:FORM 1:BODY
      */
@@ -62,4 +66,13 @@ public class BenNotify {
      * 非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用
      */
     private String businessId = "";
+
+    public void setNotifyParam(String notifyParam) {
+        this.notifyParamType = ParamTypeEnum.BODY;
+        this.notifyParam = notifyParam;
+    }
+
+    public void setNotifyParam(Map<String, Object> notifyParam) {
+        this.notifyParam = JSONUtil.toJsonStr(notifyParam);
+    }
 }

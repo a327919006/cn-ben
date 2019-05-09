@@ -270,7 +270,9 @@ public class NotifyTaskHandler {
      */
     public HttpResponse sendNotify(NotifyTask task) {
         HttpRequest request = httpRequest(task.getNotifyMethod(), task.getNotifyUrl());
-        request = param(request, task.getNotifyParamType(), task.getNotifyParam());
+        if(StrUtil.isNotBlank(task.getNotifyParam())){
+            request = param(request, task.getNotifyParamType(), task.getNotifyParam());
+        }
         return request.addHeaders(task.getNotifyHeader())
                 .timeout(task.getNotifyTimeout())
                 .execute();
@@ -314,14 +316,15 @@ public class NotifyTaskHandler {
      * @param param       请求参数
      * @return 请求对象
      */
-    private HttpRequest param(HttpRequest httpRequest, ParamTypeEnum paramType, Map<String, Object> param) {
+    @SuppressWarnings("unchecked")
+    private HttpRequest param(HttpRequest httpRequest, ParamTypeEnum paramType, String param) {
         switch (paramType) {
             case FORM:
-                return httpRequest.form(param);
+                return httpRequest.form(JSONUtil.toBean(param, Map.class));
             case BODY:
-                return httpRequest.body(JSONUtil.toJsonStr(param));
+                return httpRequest.body(param);
             default:
-                return httpRequest.form(param);
+                return httpRequest.form(JSONUtil.toBean(param, Map.class));
         }
     }
 

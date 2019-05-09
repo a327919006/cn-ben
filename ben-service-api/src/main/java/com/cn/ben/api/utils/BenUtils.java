@@ -36,7 +36,7 @@ public class BenUtils {
         BeanUtils.copyProperties(notifyRecord, task);
         task.setNotifyMethod(MethodEnum.parse(notifyRecord.getNotifyMethod()));
         task.setNotifyHeader(JSONUtil.toBean(notifyRecord.getNotifyHeader(), Map.class));
-        task.setNotifyParam(JSONUtil.toBean(notifyRecord.getNotifyParam(), Map.class));
+        task.setNotifyParam(notifyRecord.getNotifyParam());
         task.setNotifyParamType(ParamTypeEnum.parse(notifyRecord.getNotifyParamType()));
         return task;
     }
