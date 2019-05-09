@@ -46,7 +46,7 @@ public class NotifyRecordController {
             log.info("【NotifyRecord】get success：" + id);
         } else {
             log.info("【NotifyRecord】get fail, not exist：" + id);
-            rspBase.code(Constants.CODE_FAILURE).msg("通知记录不存在");
+            rspBase.code(Constants.CODE_FAILURE).msg("通知记录不存在或已删除");
         }
         return rspBase;
     }

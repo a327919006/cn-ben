@@ -139,7 +139,8 @@
                     $('#notify_log_detail_form').form('load', retObj.data);
                     $('#notify_log_detail_form').form('load', rowData);
                 } else {
-                    $.messager.alert('错误提示', '加载数据异常', 'error');
+                    $.messager.alert('错误提示', retObj.msg, 'error');
+                    $('#notify_log_detail_form').form('load', rowData);
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
