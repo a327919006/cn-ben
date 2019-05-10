@@ -40,11 +40,11 @@ public class SampleController {
         // 发送通知-请求方式POST，请求参数类型Body
         sendPostBodyNotify(req);
         // 发送通知-请求方式POST，请求参数类型FORM表单
-        sendPostFormNotify(req);
+//        sendPostFormNotify(req);
         // 发送通知-请求方式GET
-        sendGetNotify(req);
+//        sendGetNotify(req);
         // 发送通知-默认请求
-        sendNotifyDefault();
+//        sendNotifyDefault();
 
         log.info("【sample】发送通知成功");
         Map<String, Object> rsp = new HashMap<>();
