@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.cn.ben.dal.mapper",
         "com.cn.ben.service.config",
         "com.cn.ben.service.listener",
+        "com.cn.ben.service.handler",
         "com.cn.ben.service.mq"})
 public class ServiceApplication {
     public static void main(String[] args) {

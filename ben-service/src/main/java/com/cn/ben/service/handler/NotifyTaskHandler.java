@@ -1,4 +1,4 @@
-package com.cn.ben.service.mq;
+package com.cn.ben.service.handler;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;

@@ -67,3 +67,7 @@ monitor:
   memory:
     less-percent: 15
     sleep-time: 120000
+  # 通知监控
+  notify:
+    not-finish-count: 1000
+    add-rate: 20

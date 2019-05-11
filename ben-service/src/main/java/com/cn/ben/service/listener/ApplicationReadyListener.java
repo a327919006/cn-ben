@@ -2,7 +2,7 @@ package com.cn.ben.service.listener;
 
 import com.cn.ben.api.model.dto.memory.BenMemory;
 import com.cn.ben.api.utils.BenUtils;
-import com.cn.ben.service.mq.NotifyTaskHandler;
+import com.cn.ben.service.handler.NotifyTaskHandler;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

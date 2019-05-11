@@ -6,6 +6,7 @@ import com.cn.ben.api.model.dto.notify.NotifyTask;
 import com.cn.ben.api.model.po.NotifyRecord;
 import com.cn.ben.api.service.INotifyRecordService;
 import com.cn.ben.api.utils.BenUtils;
+import com.cn.ben.service.handler.NotifyTaskHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;

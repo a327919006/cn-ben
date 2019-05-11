@@ -16,7 +16,7 @@ import com.cn.ben.api.service.INotifyLogService;
 import com.cn.ben.api.service.INotifyRecordService;
 import com.cn.ben.api.utils.BenUtils;
 import com.cn.ben.dal.mapper.NotifyRecordMapper;
-import com.cn.ben.service.mq.NotifyTaskHandler;
+import com.cn.ben.service.handler.NotifyTaskHandler;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
