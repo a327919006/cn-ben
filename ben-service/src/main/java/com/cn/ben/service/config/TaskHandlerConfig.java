@@ -28,7 +28,7 @@ public class TaskHandlerConfig {
      */
     private Integer keepAliveTime = 60000;
     /**
-     * 缓存队列大小
+     * 线程池缓存队列大小
      */
     private Integer queueCapacity = 10;
 

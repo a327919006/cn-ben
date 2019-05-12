@@ -23,7 +23,7 @@ import java.util.Map;
  * @date 2019/3/11.
  */
 @RestController
-@Api(tags = "收件人手机号", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@Api(tags = "通知测试", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @RequestMapping(value = "/sample")
 @Slf4j
 public class SampleController {
