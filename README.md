@@ -61,7 +61,7 @@
 #### BenNotify参数说明
 
 | 参数  | 类型 | 说明  | 必须  | 默认值  |
-| ------------ | ------------ |
+| ------------ | ------------ | ------------ | ------------ | ------------ |
 | notifyUrl  | String  |通知-请求地址  | 是 | 无|
 | notifyMethod  | MethodEnum  | 通知-请求方式 0:GET, 1:POST, 2:HEAD, 3:OPTIONS, 4:PUT, 5:DELETE, 6:TRACE, 7:CONNECT, 8:PATCH  | 是 | POST|
 | notifyHeader  | Map<String, String>  | 通知-请求头  | 否 | 无|
