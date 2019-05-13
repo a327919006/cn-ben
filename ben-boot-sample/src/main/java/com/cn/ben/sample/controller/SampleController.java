@@ -91,7 +91,7 @@ public class SampleController {
         BenNotify notify = new BenNotify();
 
         // 通知-请求地址，必须指定
-        notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify/post/body");
+        notify.setNotifyUrl("http://127.0.0.1:10082/sample/notify/post/body");
 
         // 通知-请求方式，可不指定，默认POST
         notify.setNotifyMethod(MethodEnum.POST);
@@ -136,7 +136,7 @@ public class SampleController {
         BenNotify notify = new BenNotify();
 
         // 通知-请求地址
-        notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify/post/form");
+        notify.setNotifyUrl("http://127.0.0.1:10082/sample/notify/post/form");
 
         // 通知-请求参数
         Map<String, Object> param = new HashMap<>();
@@ -168,7 +168,7 @@ public class SampleController {
         // 构造通知对象
         BenNotify notify = new BenNotify();
         // 通知-请求地址
-        notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify/get");
+        notify.setNotifyUrl("http://127.0.0.1:10082/sample/notify/get");
         // 通知-请求方式
         notify.setNotifyMethod(MethodEnum.GET);
         // 通知-请求参数
@@ -200,7 +200,7 @@ public class SampleController {
     private void sendNotifyDefault() {
         // 默认请求方式POST,无请求参数，无请求头参数
         BenNotify notify = new BenNotify();
-        notify.setNotifyUrl("http://127.0.0.1:10081/sample/notify/post/form");
+        notify.setNotifyUrl("http://127.0.0.1:10082/sample/notify/post/form");
 
         // 发送通知
         jmsMessagingTemplate.convertAndSend(BenNotify.QUEUE, notify);

@@ -1,6 +1,6 @@
 # 运行端口
 server:
-  port: 10081
+  port: 10082
 
 spring:
   # ActiveMQ配置

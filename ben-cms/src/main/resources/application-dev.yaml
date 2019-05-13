@@ -1,6 +1,6 @@
 # ben-cms运行端口和访问根路径，可根据自身情况配置
 server:
-  port: 10082
+  port: 10081
   servlet:
     context-path: /ben-cms
 
