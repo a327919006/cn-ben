@@ -43,6 +43,7 @@
 
 ### 业务系统对接BEN
 详细对接说明请查看《[快速入门](https://www.showdoc.cc/cnben?page_id=2039690399130400 "快速入门")》和《[对接示例说明](https://www.showdoc.cc/cnben?page_id=2039691528425578 "对接示例说明")》
+
 #### maven依赖
 在业务系统的pom文件中引入ben-api最新版本依赖：
 ```
@@ -53,25 +54,11 @@
   <version>${最新稳定版本}</version>
 </dependency>
 ```
+
 #### 发送通知
 步骤：
 - 构造通知参数**BenNotify**
 - 往消息队列发送通知对象（队列名：**notify.queue**，已定义为静态变量**BenNotify.QUEUE**）
-
-#### BenNotify参数说明
-
-| 参数  | 类型 | 说明  | 必须  | 默认值  |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| notifyUrl  | String  |通知-请求地址  | 是 | 无|
-| notifyMethod  | MethodEnum  | 通知-请求方式 0:GET, 1:POST, 2:HEAD, 3:OPTIONS, 4:PUT, 5:DELETE, 6:TRACE, 7:CONNECT, 8:PATCH  | 是 | POST|
-| notifyHeader  | Map<String, String>  | 通知-请求头  | 否 | 无|
-| notifyParam  | String  | 通知-请求参数  | 否 | 无|
-| notifyParamType  | ParamTypeEnum  | 通知-请求参数类型 0:FORM 1:BODY  | 是 | FORM|
-| notifyTimeout  | Short  | 通知-请求超时时长，单位：毫秒  | 是 | 5000|
-| successFlag  | String  | 通知-成功响应标识（http请求响应包含此内容时即通知成功）（设为空或空字符串时，http响应码为2xx即通知成功）  | 否 | 无|
-| businessFailContinue  | Boolean  | 通知-Http请求成功但业务方未返回成功响应标识时（即业务方处理失败），是否继续通知  | 是 | true|
-| businessName  | String  | 本次通知的业务名称，非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用  | 否 | 无|
-| businessId  | String  | 本次通知的业务方记录ID，非必填，根据业务实际情况，用于后期流程跟踪或异常排查时使用  | 否 | 无|
 
 #### 更多分布式事务框架
 
