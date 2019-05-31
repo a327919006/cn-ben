@@ -37,9 +37,9 @@ import java.util.List;
 public class CmsNotifyRecordServiceImpl extends BaseServiceImpl<NotifyRecordMapper, NotifyRecord, String>
         implements ICmsNotifyRecordService {
 
-    @Reference
+    @Autowired
     private INotifyRecordService notifyRecordService;
-    @Reference
+    @Autowired
     private INotifyLogService notifyLogService;
     @Autowired
     private NotifyTaskHandler notifyTaskHandler;

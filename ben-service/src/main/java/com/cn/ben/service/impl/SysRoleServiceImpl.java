@@ -14,8 +14,8 @@ import com.github.pagehelper.PageHelper;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -142,7 +142,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRole, 
             roleResource.setRoleResourceId(IdUtil.simpleUUID());
             roleResource.setRoleId(roleId);
             roleResource.setResourceId(resourceId);
-            roleResource.setCreateTime(new Date());
+            roleResource.setCreateTime(LocalDateTime.now());
             roleResourceMapper.insert(roleResource);
             ret++;
         }

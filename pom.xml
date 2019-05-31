@@ -48,9 +48,6 @@
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <swagger.version>2.9.2</swagger.version>
 
-        <!--json-->
-        <jackson.version>2.9.9</jackson.version>
-
         <!--dubbo-->
         <dubbo.version>2.7.0</dubbo.version>
 
@@ -160,23 +157,6 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.versioin}</version>
-            </dependency>
-
-            <!-- jackson libs -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
             </dependency>
 
             <!--commons-->

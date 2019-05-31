@@ -3,7 +3,7 @@ package com.cn.ben.api.cms.model.po;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class RoleResource implements Serializable {
@@ -13,7 +13,7 @@ public class RoleResource implements Serializable {
 
     private String resourceId;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }
