@@ -64,12 +64,11 @@
         <dependency>
             <groupId>com.gitee.nuliing</groupId>
             <artifactId>ben-cms-api</artifactId>
-            <version>${ben-cms-api.version}</version>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>ben-cms</finalName>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

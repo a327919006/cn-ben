@@ -36,6 +36,7 @@
         <mybatis-spring-boot-starter.version>2.0.0</mybatis-spring-boot-starter.version>
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <pagehelper.version>5.1.8</pagehelper.version>
+        <swagger-starter.version>1.0.3-RELEASE</swagger-starter.version>
 
         <!-- main -->
         <mybatis-generator-core.version>1.3.7</mybatis-generator-core.version>
@@ -46,7 +47,6 @@
 
         <!-- common tools-->
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <swagger.version>2.9.2</swagger.version>
 
         <!--dubbo-->
         <dubbo.version>2.7.0</dubbo.version>
@@ -119,7 +119,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo</artifactId>
@@ -173,20 +172,9 @@
 
             <!-- swagger -->
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.google.guava</groupId>
-                        <artifactId>guava</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>io.github.wilson-he</groupId>
+                <artifactId>swagger2-spring-boot-starter</artifactId>
+                <version>${swagger-starter.version}</version>
             </dependency>
 
             <!--guava-->
@@ -201,6 +189,28 @@
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-spring</artifactId>
                 <version>${shiro.version}</version>
+            </dependency>
+
+            <!-- modules -->
+            <dependency>
+                <groupId>com.gitee.nuliing</groupId>
+                <artifactId>ben-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gitee.nuliing</groupId>
+                <artifactId>ben-cms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gitee.nuliing</groupId>
+                <artifactId>ben-service-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gitee.nuliing</groupId>
+                <artifactId>ben-dal</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

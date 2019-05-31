@@ -8,3 +8,24 @@ spring:
     broker-url: tcp://127.0.0.1:61616
     user: admin
     password: admin
+
+swagger:
+  print-init: true
+  enabled: true
+  docket:
+    base-package: com.cn.ben.sample.controller
+    group-name: ${artifactId}
+    path-selectors:
+      exclude-patterns: [/error]
+    api-info:
+      contact:
+        name: ChenNan
+        email: 327919006@qq.com
+        url: https://gitee.com/NuLiing
+      title: ${artifactId}
+      description: ben对接示例接口文档
+      license: Apache License, Version 2.0
+      license-url: https://www.apache.org/licenses/LICENSE-2.0.html
+      version: 1.0.0
+      terms-of-service-url: https://gitee.com/NuLiing
+    response-message-language: cn

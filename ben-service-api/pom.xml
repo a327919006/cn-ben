@@ -47,7 +47,6 @@
         <dependency>
             <groupId>com.gitee.nuliing</groupId>
             <artifactId>ben-api</artifactId>
-            <version>${ben-api.version}</version>
         </dependency>
     </dependencies>
 

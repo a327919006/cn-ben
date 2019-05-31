@@ -2,7 +2,7 @@
 <configuration>
 
     <property name="logback.logdir" value="./logs"/>
-    <property name="logback.appname" value="ben-boot-sample"/>
+    <property name="logback.appname" value="${artifactId}"/>
 
     <!-- 彩色日志 -->
     <!-- 彩色日志依赖的渲染类 -->
@@ -57,7 +57,6 @@
         <appender-ref ref="fileErrorLog" />
     </root>
 
-    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="OFF"/>
-    <logger name="com.cn.ben.sample.mapper" level="DEBUG"/>
+    <!--<logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="OFF"/>-->
 
 </configuration>

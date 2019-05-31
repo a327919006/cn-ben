@@ -72,12 +72,11 @@
         <dependency>
             <groupId>com.gitee.nuliing</groupId>
             <artifactId>ben-dal</artifactId>
-            <version>${ben-dal.version}</version>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>ben-service</finalName>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

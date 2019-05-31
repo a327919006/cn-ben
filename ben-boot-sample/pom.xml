@@ -16,7 +16,6 @@
         <dependency>
             <groupId>com.gitee.nuliing</groupId>
             <artifactId>ben-api</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <!-- spring boot -->
         <dependency>
@@ -31,20 +30,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.wilson-he</groupId>
+            <artifactId>swagger2-spring-boot-starter</artifactId>
+        </dependency>
 
         <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
         <dependency>
@@ -54,7 +48,7 @@
     </dependencies>
 
     <build>
-        <finalName>ben-boot-sample</finalName>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
