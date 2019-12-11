@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://www.showdoc.cc/server/api/common/visitfile/sign/29ed8bb62ad7731244f6eb838d193fd5?showdoc=.jpg" ></img>
+<img src="https://images.gitee.com/uploads/images/2019/1211/143008_6094e8d6_1588475.png" ></img>
 </p>
 
 <p align="center">
@@ -22,6 +22,8 @@
 #### 介绍
 
 **BEN**（best-effort-notify）是**基于最大努力通知**的分布式事务解决方案。
+
+如果感觉有帮助，帮忙点个star！
 
 # [中文文档](https://www.showdoc.cc/cnben "中文文档")
 - 中文文档地址：[https://www.showdoc.cc/cnben](https://www.showdoc.cc/cnben "https://www.showdoc.cc/cnben")
